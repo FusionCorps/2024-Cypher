@@ -1,0 +1,55 @@
+@font-face {
+    font-family: "Mandatory Plaything";
+    src: url(MandatoryPlaything.otf);
+}
+
+* {
+    -fx-font-family: "Mandatory Plaything";
+}
+.label {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+#textField {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
+#pageButton {
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
+#pregame {
+    /*-fx-font-size: 32px;*/
+    -fx-font-weight: bold;
+}
+
+#selectionButton {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+}
+
+#teamNameText {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: red;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: left;
+    -fx-font-family: Bahnschrift;
+}
+
+
