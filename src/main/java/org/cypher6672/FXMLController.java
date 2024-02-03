@@ -13,12 +13,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.controlsfx.control.Rating;
 import org.cypher6672.ui.AlertBox;
 import org.cypher6672.ui.LimitedTextField;
+import org.cypher6672.ui.PlusMinusBox;
 import org.cypher6672.ui.SceneSizeChangeListener;
 import org.cypher6672.util.CopyImageToClipBoard;
 import org.cypher6672.util.QRFuncs;
@@ -29,36 +31,27 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.awt.Toolkit;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Optional;
+import java.util.*;
 
 public class FXMLController {
-    /**
-     * scene0:begin
-     * scene1:pregame
-     * scene2:auton
-     * scene3:teleop
-     * scene4:endgame
-     * scene5:qualitative notes
-     * scene6:QR CODE
-     */
+    public enum Page {
+        BEGIN, PREGAME, AUTON, TELEOP, ENDGAME, QUALITATIVE_NOTES, QR_CODE
+    }
 
+    private static Page currPage = Page.BEGIN;
     private static LinkedHashMap<String, String> info = new LinkedHashMap<>(); //stores user input data
     private static HashMap<String, Integer> toggleMap = new HashMap<>() {{
         putIfAbsent("driveStation", null);
         putIfAbsent("drivetrainType", null);
     }}; //stores toggle group values
 
-    private static int sceneIndex = 0;  //used for changing pages
     private static StringBuilder data = new StringBuilder(); //used to build data output string in sendInfo()
     private static boolean isNextPageClicked = false; //used in initialize() to prevent data from being sent to info HashMap before user clicks next page
-    private static String autonColor = "R"; //for changing color in auton pickup grid
-    private static boolean PNGflipped = false; //for flipping starting location image
+    private static String autonPickupGridColor = "B"; //for changing color in auton pickup grid
+    private static boolean startLocationImageFlipped = false; //for flipping starting location image
+    private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
-    //TODO: save scouter name previously inputted,
-    // maybe save list of previous scouter names in file, and use dropdown box
+    //TODO: save scouter name previously inputted during session
 
     //======================FXML DATA FIELDS======================
     //data for each page, variables are named the same as corresponding fx:ids in fxml files for consistency
@@ -70,10 +63,47 @@ public class FXMLController {
     @FXML private ToggleGroup driveStation;
     @FXML private CheckBox preload;
     //page 2
+    @FXML private CheckBox mobility;
+    ArrayList<Integer> autonPickups;
+    @FXML private PlusMinusBox autoAmp;
+    @FXML private PlusMinusBox autoAmpMisses;
+    @FXML private PlusMinusBox autoSpeakerClose;
+    @FXML private PlusMinusBox autoSpeakerMid;
+    @FXML private PlusMinusBox autoSpeakerCloseMisses;
+    @FXML private PlusMinusBox autoSpeakerMidMisses;
     //page 3
+    @FXML private PlusMinusBox friendlyPickups;
+    @FXML private PlusMinusBox neutralPickups;
+    @FXML private PlusMinusBox oppPickups;
+    @FXML private PlusMinusBox sourcePickups;
+    @FXML private PlusMinusBox teleopSpeakerClose;
+    @FXML private PlusMinusBox teleopSpeakerMid;
+    @FXML private PlusMinusBox teleopSpeakerFar;
+    @FXML private PlusMinusBox teleopSpeakerCloseMisses;
+    @FXML private PlusMinusBox teleopSpeakerMidMisses;
+    @FXML private PlusMinusBox teleopSpeakerFarMisses;
+    @FXML private PlusMinusBox teleopAmp;
+    @FXML private PlusMinusBox teleopAmpMisses;
+    @FXML private PlusMinusBox teleopTrap;
+    @FXML private PlusMinusBox teleopTrapMisses;
     //page 4
+    @FXML private CheckBox climb;
+    @FXML private TextField climbTime;
+    @FXML private ComboBox<Integer> climbPartners;
+    @FXML private CheckBox spotlight;
     //page 5
+    @FXML private CheckBox shuttle;
+    @FXML private Rating shooter;
+    @FXML private Rating intake;
+    @FXML private Rating speed;
+    @FXML private Rating driver;
+    @FXML private LimitedTextField scoutName;
+    @FXML private TextArea comments;
 
+    //page 6
+    @FXML private ImageView imageBox;
+    @FXML private Text reminderBox;
+    @FXML private Text dataStr;
 
     private BufferedImage qrImage;
     @FXML private ImageView startLocationPNG; //starting location image
@@ -81,12 +111,12 @@ public class FXMLController {
     //=============================METHODS FOR CONTROLLING APP LOGIC=============================
     //runs at loading of any scene, defaults null values and reloads previously entered data
     public void initialize() {
-        if (sceneIndex == 1) {
+        if (currPage == Page.PREGAME) {
             //handles team name display
             teamNum.setOnKeyTyped(event -> {
                 try {
                     BufferedReader csvReader = new BufferedReader(new InputStreamReader(
-                            this.getClass().getResourceAsStream("teamList.csv")));
+                            Objects.requireNonNull(this.getClass().getResourceAsStream("teamList.csv"))));
                     String line;
                     while ((line = csvReader.readLine()) != null) {
                         String[] pair = line.split(",");
@@ -100,70 +130,21 @@ public class FXMLController {
                 }
             });
         }
-        //TODO: default null values based on page number
+        //TODO: default null values based on page
         if (isNextPageClicked) {
-            switch (sceneIndex) {
-                case 1 -> {
+            switch (currPage) {
+                case PREGAME -> {
                     if (matchNum.getText().isEmpty()) matchNum.setText(prevMatchNum);
                 }
-                case 2 -> {
+                case AUTON -> {
                 }
-                case 3 -> {
-                }
-                default -> {
+                case QR_CODE -> {
+                    reminderBox.setText("Team Number: " + info.get("teamNum"));
                 }
             }
-            reloadData();
         }
-    }
 
-    /**
-     * <p> {@code resetAll} - resets all forms of data storage and goes to first page
-     * <p> {@code nextPage} - goes to next page
-     * <p> {@code prevPage} - goes to previous page
-     * <p> {@code setPage} - general function for setting page number
-     */
-    //implementations of setPage() for going to next and previous pages
-    @FXML private void resetAll(ActionEvent event) throws IOException {
-        //TODO: set default match number
-
-        // reset data storage variables
-        data = new StringBuilder();
-        info = new LinkedHashMap<>();
-
-        // resets UI to scene1
-        sceneIndex = 0;
-        nextPage(event);
-    }
-    @FXML private void nextPage(ActionEvent event) throws IOException {
-        collectData();
-        isNextPageClicked = true;
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        setPage(stage, ++sceneIndex);
-    }
-    @FXML private void prevPage(ActionEvent event) throws IOException {
-        //collects data from current page and goes to previous page
-        collectData();
-        if (sceneIndex > 0) sceneIndex--;
-        isNextPageClicked = false;
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        setPage(stage, sceneIndex);
-    }
-
-    //changes page to the scene specified by sceneIndex
-    public static void setPage(Stage stage, int page) throws IOException {
-        sceneIndex = page;
-        FXMLLoader loader = new FXMLLoader(FXMLController.class.getResource("scenes/scene" + (sceneIndex) + ".fxml"));
-        //if next line causes errors, check syntax in all fxml files
-        Scene scene = new Scene(loader.load());
-
-        stage.setTitle("6672 Cypher Page " + (sceneIndex));
-        stage.setScene(scene);
-        stage.show();
-
-        letterbox(scene, (Pane) scene.getRoot());
-        stage.setFullScreenExitHint("");
-        stage.setFullScreen(true);
+        reloadData();
     }
 
     /**
@@ -184,16 +165,32 @@ public class FXMLController {
 
             //output string appended to data StringBuilder
             for (String keyName : info.keySet()) {
-                //get embedded alliance value from driveStation
-                if (keyName.equals("driveStation"))
-                    data.append("alliance=").append(info.get("driveStation").charAt(0)).append("|");
-                data.append(keyName).append("=").append(info.get(keyName)).append("|");
+                //get embedded alliance + start location value from driveStation
+                if (keyName.equals("driveStation")) {
+                    var driveStation = info.get("driveStation");
+                    char alliance = driveStation.charAt(0);
+                    char startLocation = driveStation.charAt(1);
+
+                    data.append("alliance=").append(alliance).append("|");
+                    data.append("driveStation=").append(alliance).append(startLocation).append("|");
+                    data.append("startLocation=").append(startLocation).append("|");
+                }
+                else data.append(keyName).append("=").append(info.get(keyName)).append("|");
             }
 
+            // prune last '|' character
             data = data.delete(data.lastIndexOf("|"), data.length());
 
+            dataStr.setText(data.toString());
+
+            String createdQRPath = "qrCode.png";
+
             //creates QR code and displays it on screen, runs outputAll() to save all data
-            qrImage = QRFuncs.generateQRCode(data.toString(), "qrcode.png");
+            qrImage = QRFuncs.generateQRCode(data.toString(), createdQRPath, 320, 320);
+
+            Image img = new Image("file:" + createdQRPath);
+            imageBox.setImage(img);
+
             outputAll(Integer.parseInt(info.get("matchNum")),
                     Integer.parseInt(info.get("teamNum")),
                     info.get("scoutName"));
@@ -201,39 +198,63 @@ public class FXMLController {
     }
 
     //IMPORTANT: ALL collected data elements must be added to the info HashMap in this method,
-    // with a SPECIFIC ORDER so they can be correctly parsed
+    // with a SPECIFIC ORDER, so they can be correctly parsed
     private void collectData() {
-        switch (sceneIndex) {
+        switch (currPage) {
             // pregame
-            case 1 -> {
+            case PREGAME -> {
                 collectDataTextField(teamNum, "teamNum");
                 collectDataTextField(matchNum, "matchNum");
                 collectDataToggleGroup(driveStation, "driveStation");
-                //TODO: check if we need alliance/startLocation fields
                 collectDataCheckBox(preload, "preload");
             }
-            case 2 -> {
-
+            case AUTON -> {
+                collectDataCheckBox(mobility, "mobility");
+                collectDataArray(autonPickups, "autonPickups");
+                collectDataTextField(autoAmp.getValueElement(), "autoAmp");
+                collectDataTextField(autoAmpMisses.getValueElement(), "autoAmpMisses");
+                collectDataTextField(autoSpeakerClose.getValueElement(), "autoSpeakerClose");
+                collectDataTextField(autoSpeakerMid.getValueElement(), "autoSpeakerMid");
+                collectDataTextField(autoSpeakerCloseMisses.getValueElement(), "autoSpeakerCloseMisses");
+                collectDataTextField(autoSpeakerMidMisses.getValueElement(), "autoSpeakerMidMisses");
             }
-            case 3 -> {
-
+            case QUALITATIVE_NOTES -> {
+                collectDataCheckBox(shuttle, "shuttle");
+                collectDataRating(shooter, "shooter");
+                collectDataRating(intake, "intake");
+                collectDataRating(speed, "speed");
+                collectDataRating(driver, "driver");
+                collectDataTextField(scoutName, "scoutName");
+                collectDataTextArea(comments, "comments");
             }
+
         }
     }
 
     //reloads data for a scene, called when loading scene in initialize() method
     private void reloadData() {
-        switch (sceneIndex) {
+        switch (currPage) {
             //TODO: add cases for each page
-            case 1 -> {
+            case PREGAME -> {
                 reloadDataTextField(teamNum, "teamNum");
                 reloadDataTextField(matchNum, "matchNum");
                 reloadDataToggleGroup(driveStation, "driveStation");
                 reloadDataCheckBox(preload, "preload");
             }
-            case 2 -> {
+            case AUTON -> {
             }
-            case 3 -> {
+            case QUALITATIVE_NOTES -> {
+                reloadDataCheckBox(shuttle, "shuttle");
+                reloadDataRating(shooter, "shooter");
+                reloadDataRating(intake, "intake");
+                reloadDataRating(speed, "speed");
+                reloadDataRating(driver, "driver");
+                reloadDataTextField(scoutName, "scoutName");
+                reloadDataTextArea(comments, "comments");
+            }
+            case QR_CODE -> {
+                if (info.get("teamNum") != null)
+                    reminderBox.setText(info.get("scoutName") + " Scouted Team #" + info.get("teamNum") + ".");
             }
         }
     }
@@ -270,12 +291,12 @@ public class FXMLController {
     }
 
     /**
-     * <p> {@code outputAll) - central function for outputting and saving data
-     * <p> {@code writeToCSV} - writes data to CSV on computer
-     * <p> {@code copyToClipBoard} - copies data to clipboard, mainly for debugging
+     *     saves output to QR Codes and text files on computer,
+     *     copies in Desktop/Scouting and Documents/backupScouting of active user
+     *     @param matchNum match number
+     *     @param teamNum team number
+     *     @param scoutName name of scout
      */
-
-    //saves output to QR Codes and text files on computer, copies in Desktop/Scouting and Documents/backupScouting of active user
     private void outputAll(int matchNum, int teamNum, String scoutName) {
         String outputPath = "C:\\Users\\" + System.getProperty("user.name") + "\\Desktop\\Scouting";
         String qrCodePath = outputPath + "\\qrcodes";
@@ -305,8 +326,13 @@ public class FXMLController {
         }
 
     }
-
-    //helper function for outputAll() method, writes data to CSV file
+    
+    /**
+     * writes data to CSV on computer
+     * @param data HashMap data to be written
+     * @param outputCSVPath path to CSV file
+     * @throws IOException file paths not found
+     */
     private void writeToCSV(LinkedHashMap<String, String> data, String outputCSVPath) throws IOException {
         File file = new File(outputCSVPath);
         FileWriter writer = new FileWriter(file, true);
@@ -340,7 +366,10 @@ public class FXMLController {
         reader.close();
         }
 
-    //copies either data text or QR code based on button source that was clicked, mainly emergency/debug methods
+    /**
+     * copies data (text or qr code) to clipboard
+     * @param event button click source element
+     */
     @FXML private void copyToClipboard(ActionEvent event) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Button src = (Button) event.getSource();
@@ -378,6 +407,23 @@ public class FXMLController {
         info.put(key, comboBox.getValue());
     }
 
+    @FXML private void manipAutonPickupGrid(ActionEvent event) {
+        Button btn = (Button) event.getSource();
+        if (btn.getStyle().contains("-fx-background-color: white;")) {
+            btn.setStyle("-fx-background-color: green; -fx-border-color: black;");
+            autonPickups.add(Integer.valueOf(btn.getUserData().toString()));
+        } else if (btn.getStyle().contains("-fx-background-color: green;")) {
+//            btn.setStyle("-fx-background-color: red; -fx-border-color: black;");
+            btn.setStyle("-fx-background-color: white; -fx-border-color: black;");
+            autonPickups.remove(Integer.valueOf(btn.getUserData().toString()));
+//            autoFailedPickups.add(Integer.valueOf(btn.getUserData().toString()));
+        }
+//        else if (btn.getStyle().contains("-fx-background-color: red;")) {
+//            btn.setStyle("-fx-background-color: white; -fx-border-color: black;");
+//            autoFailedPickups.remove(Integer.valueOf(btn.getUserData().toString()));
+//        }
+    }
+
     //used in reloadData() for specific types of data
     private void reloadDataCheckBox(CheckBox checkBox, String key) {
         checkBox.setSelected(Boolean.parseBoolean(info.get(key)));
@@ -398,6 +444,17 @@ public class FXMLController {
         comboBox.setValue(info.get(key));
     }
 
+    private void reloadAutonPickupGrid(GridPane grid) {
+        int gridLength = grid.getChildren().size();
+        for (int i = 0; i < gridLength; i++) {
+            Button btn = (Button) grid.getChildren().get(i);
+            if (autonPickups.contains(Integer.valueOf(btn.getUserData().toString())))
+                btn.setStyle("-fx-background-color: green; -fx-border-color: black;");
+//            if (failedAutonPickups.contains(Integer.valueOf(btn.getUserData().toString())))
+//                btn.setStyle("-fx-background-color: red; -fx-border-color: black;");
+        }
+    }
+
     //displays confirmation popup before resetting app
     @FXML private void confirmReset(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -408,6 +465,93 @@ public class FXMLController {
         if (result.isPresent() && result.get() == ButtonType.OK) resetAll(event);
     }
 
+    //flips pregame start location image
+    @FXML private void flipStartLocationImage(ActionEvent ignoredEvent) {
+        if (startLocationImageFlipped) {
+            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field.png").toString()));
+            startLocationImageFlipped = false;
+        } else {
+            startLocationImageFlipped = true;
+            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed.png").toString()));
+        }
+    }
+
+    @FXML private void flipAutonPickupImage(ActionEvent ignoredEvent) {
+        if (autonPickupGridFlipped && autonPickupGridColor.equals("B")) {
+            autonPickupGridFlipped = false;
+            startLocationPNG.setImage(new Image(getClass().getResource(
+                    "images/autoPickupBlue.png").toString()));
+        }
+        else if (autonPickupGridFlipped && autonPickupGridColor.equals("R")) {
+            autonPickupGridFlipped = false;
+            startLocationPNG.setImage(new Image(getClass().getResource(
+                    "images/autoPickupRed.png").toString()));
+        }
+        else if (!autonPickupGridFlipped && autonPickupGridColor.equals("B")) {
+            autonPickupGridFlipped = true;
+            startLocationPNG.setImage(new Image(getClass().getResource(
+                    "images/autoPickupBlue-reversed.png").toString()));
+        }
+        else if (!autonPickupGridFlipped && autonPickupGridColor.equals("R")) {
+            autonPickupGridFlipped = true;
+            startLocationPNG.setImage(new Image(getClass().getResource(
+                    "images/autoPickupRed-reversed.png").toString()));
+        }
+    }
+
+    /**
+     * <p> {@code resetAll} - resets all forms of data storage and goes to first page
+     * <p> {@code nextPage} - goes to next page
+     * <p> {@code prevPage} - goes to previous page
+     * <p> {@code setPage} - general function for setting page number
+     */
+    //implementations of setPage() for going to next and previous pages
+    @FXML private void resetAll(ActionEvent event) throws IOException {
+        // increments match number for next match
+        prevMatchNum = String.valueOf(Integer.parseInt(info.get("matchNum")) + 1);
+
+        // reset data storage variables
+        data = new StringBuilder();
+        info = new LinkedHashMap<>();
+        toggleMap = new HashMap<>();
+
+        // resets UI to scene1
+        currPage = Page.PREGAME;
+        nextPage(event);
+    }
+    @FXML private void nextPage(ActionEvent event) throws IOException {
+        collectData();
+        isNextPageClicked = true;
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        setPage(stage, Page.values()[currPage.ordinal() + 1]);
+    }
+    @FXML private void prevPage(ActionEvent event) throws IOException {
+        //collects data from current page and goes to previous page
+        collectData();
+        if (currPage == Page.BEGIN) return;
+        isNextPageClicked = false;
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        setPage(stage, Page.values()[currPage.ordinal() - 1]);
+    }
+
+    //changes page to the scene specified by sceneIndex
+    public static void setPage(Stage stage, Page page) throws IOException {
+        currPage = page;
+        FXMLLoader loader = new FXMLLoader(FXMLController.class.getResource("scenes/scene" + (currPage.ordinal()) + ".fxml"));
+        //if next line causes errors, check syntax in all fxml files
+        Scene scene = new Scene(loader.load());
+
+        stage.setTitle("6672 Cypher Page " + (currPage.ordinal()));
+        stage.setScene(scene);
+        stage.show();
+
+        letterbox(scene, (Pane) scene.getRoot());
+//        stage.setFullScreenExitHint("");
+//        stage.setFullScreen(true);
+        stage.setMaximized(true);
+        stage.setMaximized(true);
+    }
+
     private static void letterbox(final Scene scene, final Pane contentPane) {
         final double initWidth  = scene.getWidth();
         final double initHeight = scene.getHeight();
@@ -416,16 +560,5 @@ public class FXMLController {
         SceneSizeChangeListener sizeListener = new SceneSizeChangeListener(scene, ratio, initHeight, initWidth, contentPane);
         scene.widthProperty().addListener(sizeListener);
         scene.heightProperty().addListener(sizeListener);
-    }
-
-    //flips pregame start location image
-    @FXML private void flipImage(ActionEvent ignoredEvent) {
-        if (PNGflipped) {
-            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field.png").toString()));
-            PNGflipped = false;
-        } else {
-            PNGflipped = true;
-            startLocationPNG.setImage(new Image(getClass().getResource("images/start_locs_flipped.png").toString()));
-        }
     }
 }

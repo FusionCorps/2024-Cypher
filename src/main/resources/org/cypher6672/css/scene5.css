@@ -2,24 +2,12 @@
     font-family: "Mandatory Plaything";
     src: url(MandatoryPlaything.otf);
 }
-
 * {
-    -fx-font-family: "Mandatory Plaything";
-}
+    -fx-font-family: "Mandatory Plaything"; }
 
 .label {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
-}
-
-#textField {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
-    -fx-background-color: #000000;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
-    -fx-alignment: center;
 }
 
 #pageButton {
@@ -32,19 +20,30 @@
     -fx-alignment: center;
 }
 
-#selectionButton {
-    -fx-font-size: 26px;
+#quantitative {
+    -fx-font-size: 72px;
     -fx-font-weight: bold;
-    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+    -fx-stroke-type: outside;
 }
 
-#teamNameText {
-    -fx-font-size: 20px;
+#comments {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-fill: red;
+    -fx-text-alignment: center;
+    -fx-stroke-type: outside;
+    -fx-wrap-text: true;
+    -fx-font-family: Bahnschrift;
+}
+
+#scoutNameTextField {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
     -fx-background-radius: 5px;
     -fx-padding: 5px;
-    -fx-alignment: left;
+    -fx-alignment: center;
     -fx-font-family: Bahnschrift;
 }
 

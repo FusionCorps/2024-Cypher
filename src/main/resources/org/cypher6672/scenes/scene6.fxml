@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1000.0" prefWidth="1324.0" style="-fx-background-color: #034e7b;" stylesheets="@../css/scene6.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+
+    <Button id="sendInfoButton" layoutX="363.0" layoutY="14.0" onAction="#sendInfo" prefHeight="168.0" prefWidth="697.0" text="Generate QR" />
+
+    <Button id="resetButton" layoutX="937.0" layoutY="493.0" onAction="#confirmReset" prefHeight="273.0" prefWidth="360.0" text="Start Over" />
+
+    <Button id="prevPageButton" layoutX="77.0" layoutY="473.0" onAction="#prevPage" prefHeight="100.0" prefWidth="215.0" text="Prev Page" />
+
+    <ImageView fx:id="imageBox" fitHeight="420.0" fitWidth="420.0" layoutX="466.0" layoutY="229.0" pickOnBounds="true" preserveRatio="true">
+      <viewport>
+         <Rectangle2D height="320.0" width="320.0" />
+      </viewport></ImageView>
+
+    <Button id="clipboardButton" layoutX="72.0" layoutY="256.0" onAction="#copyToClipboard" prefHeight="150.0" prefWidth="215.0" text="Copy Data (Text)" />
+
+    <Button id="clipboardButton" layoutX="1082.0" layoutY="247.0" onAction="#copyToClipboard" prefHeight="150.0" prefWidth="215.0" text="Copy Data (QR Code)" />
+
+    <Text id="reminderBox" fx:id="reminderBox" layoutX="59.0" layoutY="52.0" text="You Scouted Team XXXX." wrappingWidth="264.79998779296875" />
+
+    <Text id="outputString" fx:id="dataStr" layoutX="33.0" layoutY="725.0" wrappingWidth="886.1369209289551" />
+</Pane>

@@ -12,7 +12,15 @@
     -fx-font-weight: bold;
 }
 
-#textField {
+#title {
+    -fx-font-size:40px;
+}
+
+#mobility {
+    -fx-font-size: 32px;
+}
+
+#flipImageBtn {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
@@ -31,21 +39,3 @@
     -fx-padding: 5px;
     -fx-alignment: center;
 }
-
-#selectionButton {
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-    -fx-wrap-text: true;
-}
-
-#teamNameText {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-fill: red;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
-    -fx-alignment: left;
-    -fx-font-family: Bahnschrift;
-}
-
-

@@ -38,7 +38,7 @@ public class AppMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLController.setPage(primaryStage, 0);
+        FXMLController.setPage(primaryStage, FXMLController.Page.BEGIN);
     }
 
     public static void main(String[] args) {

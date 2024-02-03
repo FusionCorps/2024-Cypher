@@ -11,10 +11,10 @@ import java.nio.file.Paths;
 
 //for generating QR codes at end of scouting a match
 public class QRFuncs {
-    public static BufferedImage generateQRCode(String text, String path) throws Exception {
+    public static BufferedImage generateQRCode(String text, String path, int width, int heigbt) throws Exception {
         QRCodeWriter writer = new QRCodeWriter();
         BufferedImage bufferedImage;
-        BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 320, 320);
+        BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, width, heigbt);
 
         Path filePath = Paths.get(path);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", filePath);

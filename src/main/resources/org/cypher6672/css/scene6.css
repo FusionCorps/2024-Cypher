@@ -1,0 +1,81 @@
+@font-face {
+    font-family: "Mandatory Plaything";
+    src: url(MandatoryPlaything.otf);
+}
+* {
+    -fx-font-family: "Mandatory Plaything";
+}
+#sendInfoButton {
+    -fx-alignment: center;
+    -fx-content-display: center;
+    -fx-text-overrun: clip;
+    -fx-font-size: 72px;
+}
+
+#resetButton {
+    -fx-alignment: center;
+    -fx-content-display: center;
+    -fx-text-overrun: clip;
+    -fx-font-size: 72px;
+    -fx-background-color: #004212FF;
+    -fx-text-alignment: center;
+    -fx-text-fill: white;
+    -fx-wrap-text: true;
+    -fx-font-weight: bold;
+    -fx-border-color: red;
+}
+
+#prevPageButton {
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
+#nextPageButton {
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
+#clipboardButton {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+#reminderBox {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-stroke-type: outside;
+    -fx-wrap-text: true;
+    -fx-text-fill: white;
+}
+
+#outputString {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: left;
+    -fx-stroke-type: outside;
+    -fx-wrap-text: true;
+    -fx-text-fill: white;
+    -fx-font-family: "Times New Roman";
+    -fx-background-color: black;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}

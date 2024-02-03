@@ -3,23 +3,11 @@
     src: url(MandatoryPlaything.otf);
 }
 
-* {
-    -fx-font-family: "Mandatory Plaything";
-}
+*{ -fx-font-family: "Mandatory Plaything";}
 
 .label {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
-}
-
-#textField {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
-    -fx-background-color: #000000;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
-    -fx-alignment: center;
 }
 
 #pageButton {
@@ -32,20 +20,26 @@
     -fx-alignment: center;
 }
 
-#selectionButton {
-    -fx-font-size: 26px;
+#endgame {
+    -fx-font-size: 60px;
     -fx-font-weight: bold;
+    -fx-text-alignment: center;
     -fx-wrap-text: true;
 }
 
-#teamNameText {
-    -fx-font-size: 20px;
+.check-box {
+    -fx-font-size: 48px;
     -fx-font-weight: bold;
-    -fx-fill: red;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
-    -fx-alignment: left;
-    -fx-font-family: Bahnschrift;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
 }
 
-
+.text-field {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}

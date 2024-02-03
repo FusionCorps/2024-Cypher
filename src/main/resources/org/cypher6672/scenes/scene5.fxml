@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.Rating?>
+<?import org.cypher6672.ui.LimitedTextField?>
+
+<Pane minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #0570b0;" stylesheets="@../css/scene5.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+
+    <Text id="quantitative" layoutX="195.0" layoutY="81.0" text="Qualitative" />
+
+    <Button id="pageButton" layoutX="20.0" layoutY="430.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+    <Button id="pageButton" layoutX="935.0" layoutY="430.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+
+    <TextArea id="comments" fx:id="comments" layoutX="611.0" layoutY="108.0" prefHeight="231.0" prefWidth="485.0" promptText="Comments (fouls, strategy, anything else notable)" />
+
+    <Label id="driverSkill" layoutX="40.0" layoutY="117.0" text="Driver Skill/SPEED" />
+    <Rating fx:id="driver" layoutX="422.0" layoutY="119.0" rating="3.0" />
+    <LimitedTextField id="scoutNameTextField" fx:id="scoutName" layoutX="317.0" layoutY="201.0" onKeyPressed="#validateInput" prefHeight="45.0" prefWidth="253.0" />
+    <Label layoutX="40.0" layoutY="211.0" text="Scouter Name" />
+</Pane>

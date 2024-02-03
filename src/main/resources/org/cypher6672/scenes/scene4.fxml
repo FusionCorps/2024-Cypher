@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.Integer?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #3690c0;" stylesheets="@../css/scene4.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+    <Button id="pageButton" layoutY="386.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+    <Button id="pageButton" layoutX="605.0" layoutY="386.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+
+    <Label id="endgame" layoutX="238.0" layoutY="21.0" text="Endgame" />
+
+    <CheckBox id="buddyClimb" fx:id="climb" layoutX="15.0" layoutY="97.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="344.0" text="Climbed?" />
+   <TextField id="climbTime" fx:id="climbTime" layoutX="76.0" layoutY="272.0" prefHeight="48.0" prefWidth="243.0" text="0" />
+   <Label layoutX="24.0" layoutY="176.0" prefHeight="101.0" prefWidth="383.0" text="Climb Time Est. (s) (Leave 0 if no climb) " textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="407.0" layoutY="119.0" text="# Climb Partners" />
+   <CheckBox id="spotlight" fx:id="spotlight" layoutX="401.0" layoutY="288.0" mnemonicParsing="false" text="Spotlit?" />
+   <ComboBox fx:id="climbPartners" layoutX="462.0" layoutY="169.0" prefHeight="48.0" prefWidth="243.0">
+        <items>
+             <FXCollections fx:factory="observableArrayList">
+                <Integer fx:value="0" />
+                <Integer fx:value="1" />
+                <Integer fx:value="2" />
+             </FXCollections>
+        </items>
+   </ComboBox>
+</Pane>
