@@ -4,9 +4,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 // an HBox element containing +/- counters for user input
 public class PlusMinusBox extends HBox {
-    LimitedTextField value = new LimitedTextField();
-    Button minus = new Button("-");
-    Button plus = new Button("+");
+    public LimitedTextField value = new LimitedTextField();
+    public Button minus = new Button("-");
+    public Button plus = new Button("+");
 
 
     public PlusMinusBox() {
