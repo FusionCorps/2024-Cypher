@@ -46,6 +46,12 @@ public class PlusMinusBox extends HBox {
         minus.setOnAction(e -> {
             if (!value.getText().equals("0")) value.setText(String.valueOf(Integer.parseInt(value.getText()) - 1));
         });
+        value.setIntegerField();
+        value.setMaxLength(2);
+        // ensure value is not empty
+        value.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) value.setText("0");
+        });
     }
 
     public LimitedTextField getValueElement() {

@@ -33,6 +33,13 @@ public class Tally extends GridPane {
             numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) + 1));
             denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) + 1));
         });
+
+        // restrict denominator from decrementing below numerator
+        denominator.minus.setOnAction(e -> {
+            if (!denominator.value.getText().equals("0") && Integer.parseInt(denominator.value.getText()) > Integer.parseInt(numerator.value.getText())) {
+                denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) - 1));
+            }
+        });
     }
 
     public PlusMinusBox getNumerator() {

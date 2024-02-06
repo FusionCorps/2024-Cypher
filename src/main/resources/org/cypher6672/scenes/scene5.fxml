@@ -17,7 +17,7 @@
     <Button id="pageButton" layoutY="424.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
     <Button id="pageButton" layoutX="757.0" layoutY="424.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
-    <TextArea id="comments" fx:id="comments" layoutX="489.0" layoutY="105.0" prefHeight="261.0" prefWidth="425.0" promptText="Comments (fouls, strategy, anything else notable)" />
+    <TextArea id="comments" fx:id="comments" onKeyPressed="#validateInput" layoutX="489.0" layoutY="105.0" prefHeight="261.0" prefWidth="425.0" promptText="Comments (fouls, strategy, anything else notable)" />
     <LimitedTextField id="scoutNameTextField" fx:id="scoutName" layoutX="476.0" layoutY="380.0" onKeyPressed="#validateInput" prefHeight="45.0" prefWidth="253.0" />
     <Label layoutX="195.0" layoutY="385.0" text="Scouter Name" />
    <Label id="driverSkill" layoutX="49.0" layoutY="149.0" text="Shooter" />

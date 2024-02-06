@@ -29,10 +29,13 @@
 }
 
 .check-box {
-    -fx-font-size: 48px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-alignment: center;
-    -fx-wrap-text: true;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
 }
 
 .text-field {

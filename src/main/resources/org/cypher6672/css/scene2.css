@@ -17,10 +17,6 @@
     -fx-font-size:72px;
 }
 
-#mobility {
-    -fx-font-size: 32px;
-}
-
 #flipImageBtn {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
@@ -33,6 +29,16 @@
 
 #pageButton {
     -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
+.check-box {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
     -fx-background-color: #000000;

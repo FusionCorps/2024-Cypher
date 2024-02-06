@@ -19,7 +19,7 @@
 
     <Label id="communityPickups" layoutX="84.0" layoutY="138.0" text="Friendly" />
     <Label id="neutralPickups" layoutX="86.0" layoutY="186.0" prefHeight="96.0" prefWidth="162.0" text="Neutral Zone" textAlignment="CENTER" wrapText="true" />
-    <Label id="singlePickups" fx:id="sourcePickups" layoutX="480.0" layoutY="134.0" prefHeight="44.0" prefWidth="144.0" text="Source" textAlignment="CENTER" wrapText="true" />
+    <Label id="singlePickups" layoutX="480.0" layoutY="134.0" prefHeight="44.0" prefWidth="144.0" text="Source" textAlignment="CENTER" wrapText="true" />
     <Label id="doublePickups" layoutX="465.0" layoutY="208.0" prefHeight="52.0" prefWidth="192.0" text="Opponent" textAlignment="CENTER" wrapText="true" />
     <Label layoutX="33.0" layoutY="84.0" prefHeight="36.0" prefWidth="150.0" style="-fx-font-weight: bold; -fx-font-style: italic;" text="Pickups" textAlignment="CENTER" underline="true" wrapText="true">
         <font>
@@ -28,7 +28,7 @@
     </Label>
    <PlusMinusBox fx:id="friendlyPickups" layoutX="284.0" layoutY="131.0" />
    <PlusMinusBox fx:id="neutralPickups" layoutX="284.0" layoutY="209.0" />
-   <PlusMinusBox layoutX="675.0" layoutY="131.0" />
+   <PlusMinusBox fx:id="sourcePickups" layoutX="675.0" layoutY="131.0" />
    <PlusMinusBox fx:id="oppPickups" layoutX="675.0" layoutY="209.0" />
    <Line endX="819.6000366210938" layoutX="122.0" layoutY="282.0" startX="-100.0" />
    <Label layoutX="27.0" layoutY="337.0" text="Amp" />

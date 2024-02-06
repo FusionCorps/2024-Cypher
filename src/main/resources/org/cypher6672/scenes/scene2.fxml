@@ -24,10 +24,10 @@
    <Label id="title" layoutX="200.0" layoutY="14.0" text="Auton" />
 
 
-   <ImageView fx:id="autoPickupGrid" fitHeight="420.0" fitWidth="472.0" layoutX="383.0" layoutY="93.0" pickOnBounds="true">
+   <ImageView fx:id="autoPickupPNG" fitHeight="420.0" fitWidth="472.0" layoutX="383.0" layoutY="93.0" pickOnBounds="true">
       <Image url="@../images/autoPickupBlue.png" />
    </ImageView>
-   <GridPane fx:id="a_preGrid" layoutX="526.0" layoutY="120.0" prefHeight="360.0" prefWidth="330.0">
+   <GridPane fx:id="autoPickupGrid" layoutX="526.0" layoutY="120.0" prefHeight="360.0" prefWidth="330.0">
       <columnConstraints>
          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

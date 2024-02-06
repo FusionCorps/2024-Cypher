@@ -1,4 +1,3 @@
-//TODO (long-term restructuring) EFFICIENCY/READABILITY/EASIER TO MODIFY (for new games): how to encapsulate/declare data fields in more efficient way (e.g. maybe hashmap for each field, like [Object:fx_id]?)
 //TODO: work on autonPickups arraylist in gui
 package org.cypher6672;
 
@@ -48,6 +47,7 @@ public class FXMLController {
     private static boolean startLocationImageFlipped = false; //for flipping starting location image
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
+    private static String prevScouterName = null;
     //TODO: save scouter name previously inputted during session
 
     //======================FXML DATA FIELDS======================
@@ -97,6 +97,7 @@ public class FXMLController {
 
     private BufferedImage qrImage;
     @FXML private ImageView startLocationPNG; //starting location image
+    @FXML private ImageView autoPickupPNG; //auton pickup grid image
 
     //=============================METHODS FOR CONTROLLING APP LOGIC=============================
     //runs at loading of any scene, defaults null values and reloads previously entered data
@@ -125,6 +126,25 @@ public class FXMLController {
             switch (currPage) {
                 case PREGAME -> {
                     if (matchNum.getText().isEmpty()) matchNum.setText(prevMatchNum);
+                    // add listener to driveStation to update startLocation img
+                    driveStation.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            char alliance = newValue.getUserData().toString().charAt(0);
+                            if (alliance == 'b') {
+                                if (startLocationImageFlipped) {
+                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+                                } else {
+                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+                                }
+                            } else {
+                                if (startLocationImageFlipped) {
+                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+                                } else {
+                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+                                }
+                            }
+                        }
+                    });
                 }
                 case AUTON -> {
                     autoAmp.initNull();
@@ -147,7 +167,7 @@ public class FXMLController {
                     climbPartners.setValue(0);
                 }
                 case QUALITATIVE_NOTES -> {
-
+                    if (prevScouterName != null) scoutName.setText(prevScouterName);
                 }
                 case QR_CODE -> {
                     reminderBox.setText("Team Number: " + info.get("teamNum"));
@@ -221,7 +241,7 @@ public class FXMLController {
             }
             case AUTON -> {
                 collectDataCheckBox(mobility, "mobility");
-                collectDataArray(autonPickups, "autonPickups");
+//                collectDataArray(autonPickups, "autonPickups");
                 collectDataTally(autoAmp, "autoAmp", "autoAmpMisses", true);
                 collectDataTally(autoSpeakerClose, "autoSpeakerClose", "autoSpeakerCloseMisses", true);
                 collectDataTally(autoSpeakerMid, "autoSpeakerMid", "autoSpeakerMidMisses", true);
@@ -306,13 +326,28 @@ public class FXMLController {
     //puts restrictions on certain LimitedTextFields
     @FXML private void validateInput(KeyEvent keyEvent) {
         Object src = keyEvent.getSource(); // element that got input
-        //TODO: add more restrictions
         if (src.equals(teamNum)) {
             teamNum.setIntegerField();
             teamNum.setMaxLength(5);
         } else if (src.equals(matchNum)) {
             matchNum.setIntegerField();
             matchNum.setMaxLength(3);
+        } else if (src.equals(scoutName)) {
+            scoutName.setRestrict("[a-zA-Z ]");
+            scoutName.setMaxLength(30);
+        } else if (src.equals(climbTime)) {
+            climbTime.setIntegerField();
+            climbTime.setMaxLength(3);
+        } else if (src.equals(comments)) {
+            // restrict '|' character from being entered in text area, and sets reasonable max length
+            comments.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.contains("|")) {
+                    comments.setText(oldValue);
+                }
+                if (comments.getText().length() > 500) {
+                    comments.setText(oldValue);
+                }
+            });
         }
     }
 
@@ -325,6 +360,9 @@ public class FXMLController {
             warnings += "Fix the team number (cannot contain only 0s or be blank). ";
         if (info.get("matchNum").isBlank() || info.get("matchNum").matches("0+"))
             warnings += "Fix the match number (cannot contain only 0s or be blank). ";
+        if (info.get("scoutName").isBlank())
+            warnings += "Fix the scout name (cannot be blank). ";
+
 
         System.out.println(warnings); // for debug purposes
         if (warnings.isBlank()) return true;
@@ -543,35 +581,46 @@ public class FXMLController {
 
     //flips pregame start location image
     @FXML private void flipStartLocationImage(ActionEvent ignoredEvent) {
-        if (startLocationImageFlipped) {
-            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field.png").toString()));
-            startLocationImageFlipped = false;
+        char alliance = driveStation.getSelectedToggle().getUserData().toString().charAt(0);
+        if (alliance == 'b') {
+            if (startLocationImageFlipped) {
+                startLocationImageFlipped = false;
+                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+            } else {
+                startLocationImageFlipped = true;
+                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+            }
         } else {
-            startLocationImageFlipped = true;
-            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed.png").toString()));
+            if (startLocationImageFlipped) {
+                startLocationImageFlipped = false;
+                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+            } else {
+                startLocationImageFlipped = true;
+                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+            }
         }
     }
 
     @FXML private void flipAutonPickupImage(ActionEvent ignoredEvent) {
         if (autonPickupGridFlipped && autonPickupGridColor.equals("B")) {
             autonPickupGridFlipped = false;
-            startLocationPNG.setImage(new Image(getClass().getResource(
+            autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupBlue.png").toString()));
         }
         else if (autonPickupGridFlipped && autonPickupGridColor.equals("R")) {
             autonPickupGridFlipped = false;
-            startLocationPNG.setImage(new Image(getClass().getResource(
+            autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupRed.png").toString()));
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor.equals("B")) {
             autonPickupGridFlipped = true;
-            startLocationPNG.setImage(new Image(getClass().getResource(
-                    "images/autoPickupBlue-reversed.png").toString()));
+            autoPickupPNG.setImage(new Image(getClass().getResource(
+                    "images/autoPickupBlueReversed.png").toString()));
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor.equals("R")) {
             autonPickupGridFlipped = true;
-            startLocationPNG.setImage(new Image(getClass().getResource(
-                    "images/autoPickupRed-reversed.png").toString()));
+            autoPickupPNG.setImage(new Image(getClass().getResource(
+                    "images/autoPickupRedReversed.png").toString()));
         }
     }
 
@@ -586,6 +635,7 @@ public class FXMLController {
     @FXML private void resetAll(ActionEvent event) throws IOException {
         // increments match number for next match
         prevMatchNum = String.valueOf(Integer.parseInt(info.get("matchNum")) + 1);
+        prevScouterName = info.get("scoutName");
 
         // reset data storage variables
         data = new StringBuilder();

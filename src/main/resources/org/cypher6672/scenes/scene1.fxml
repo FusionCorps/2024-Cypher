@@ -24,7 +24,7 @@
    <Button id="pageButton" layoutX="537.0" layoutY="317.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
    <ImageView fx:id="startLocationPNG" fitHeight="229.0" fitWidth="191.0" layoutX="507.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../images/2024-field-blue.png" />
+      <Image url="@../images/2024-field-red.png" />
    </ImageView>
    <Button id="pageButton" layoutX="395.0" layoutY="56.0" mnemonicParsing="false" onAction="#flipStartLocationImage" prefHeight="83.0" prefWidth="94.0" text="Flip Image" textAlignment="CENTER" wrapText="true" />
    <Text id="teamNameText" fx:id="teamNameText" layoutX="14.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="348.60003662109375" />
