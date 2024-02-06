@@ -51,4 +51,8 @@ public class PlusMinusBox extends HBox {
     public LimitedTextField getValueElement() {
         return value;
     }
+
+    public void initNull() {
+        value.setText("0");
+    }
 }

@@ -1,5 +1,5 @@
 //TODO (long-term restructuring) EFFICIENCY/READABILITY/EASIER TO MODIFY (for new games): how to encapsulate/declare data fields in more efficient way (e.g. maybe hashmap for each field, like [Object:fx_id]?)
-
+//TODO: work on autonPickups arraylist in gui
 package org.cypher6672;
 
 import javafx.event.ActionEvent;
@@ -18,10 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.controlsfx.control.Rating;
-import org.cypher6672.ui.AlertBox;
-import org.cypher6672.ui.LimitedTextField;
-import org.cypher6672.ui.PlusMinusBox;
-import org.cypher6672.ui.SceneSizeChangeListener;
+import org.cypher6672.ui.*;
 import org.cypher6672.util.CopyImageToClipBoard;
 import org.cypher6672.util.QRFuncs;
 
@@ -42,7 +39,7 @@ public class FXMLController {
     private static LinkedHashMap<String, String> info = new LinkedHashMap<>(); //stores user input data
     private static HashMap<String, Integer> toggleMap = new HashMap<>() {{
         putIfAbsent("driveStation", null);
-        putIfAbsent("drivetrainType", null);
+        putIfAbsent("startLocation", null);
     }}; //stores toggle group values
 
     private static StringBuilder data = new StringBuilder(); //used to build data output string in sendInfo()
@@ -61,34 +58,27 @@ public class FXMLController {
     @FXML private LimitedTextField matchNum; //match number
     @FXML private Text teamNameText; //displays team name based on team number
     @FXML private ToggleGroup driveStation;
+    @FXML private ToggleGroup startLocation;
     @FXML private CheckBox preload;
     //page 2
     @FXML private CheckBox mobility;
     ArrayList<Integer> autonPickups;
-    @FXML private PlusMinusBox autoAmp;
-    @FXML private PlusMinusBox autoAmpMisses;
-    @FXML private PlusMinusBox autoSpeakerClose;
-    @FXML private PlusMinusBox autoSpeakerMid;
-    @FXML private PlusMinusBox autoSpeakerCloseMisses;
-    @FXML private PlusMinusBox autoSpeakerMidMisses;
+    @FXML private Tally autoAmp;
+    @FXML private Tally autoSpeakerClose;
+    @FXML private Tally autoSpeakerMid;
     //page 3
     @FXML private PlusMinusBox friendlyPickups;
     @FXML private PlusMinusBox neutralPickups;
     @FXML private PlusMinusBox oppPickups;
     @FXML private PlusMinusBox sourcePickups;
-    @FXML private PlusMinusBox teleopSpeakerClose;
-    @FXML private PlusMinusBox teleopSpeakerMid;
-    @FXML private PlusMinusBox teleopSpeakerFar;
-    @FXML private PlusMinusBox teleopSpeakerCloseMisses;
-    @FXML private PlusMinusBox teleopSpeakerMidMisses;
-    @FXML private PlusMinusBox teleopSpeakerFarMisses;
-    @FXML private PlusMinusBox teleopAmp;
-    @FXML private PlusMinusBox teleopAmpMisses;
-    @FXML private PlusMinusBox teleopTrap;
-    @FXML private PlusMinusBox teleopTrapMisses;
+    @FXML private Tally teleopSpeakerClose;
+    @FXML private Tally teleopSpeakerMid;
+    @FXML private Tally teleopSpeakerFar;
+    @FXML private Tally teleopAmp;
+    @FXML private Tally teleopTrap;
     //page 4
     @FXML private CheckBox climb;
-    @FXML private TextField climbTime;
+    @FXML private LimitedTextField climbTime;
     @FXML private ComboBox<Integer> climbPartners;
     @FXML private CheckBox spotlight;
     //page 5
@@ -137,6 +127,27 @@ public class FXMLController {
                     if (matchNum.getText().isEmpty()) matchNum.setText(prevMatchNum);
                 }
                 case AUTON -> {
+                    autoAmp.initNull();
+                    autoSpeakerClose.initNull();
+                    autoSpeakerMid.initNull();
+                }
+                case TELEOP -> {
+                    friendlyPickups.initNull();
+                    neutralPickups.initNull();
+                    oppPickups.initNull();
+                    sourcePickups.initNull();
+                    teleopSpeakerClose.initNull();
+                    teleopSpeakerMid.initNull();
+                    teleopSpeakerFar.initNull();
+                    teleopAmp.initNull();
+                    teleopTrap.initNull();
+                }
+                case ENDGAME -> {
+                    climbTime.setText("0");
+                    climbPartners.setValue(0);
+                }
+                case QUALITATIVE_NOTES -> {
+
                 }
                 case QR_CODE -> {
                     reminderBox.setText("Team Number: " + info.get("teamNum"));
@@ -211,12 +222,26 @@ public class FXMLController {
             case AUTON -> {
                 collectDataCheckBox(mobility, "mobility");
                 collectDataArray(autonPickups, "autonPickups");
-                collectDataTextField(autoAmp.getValueElement(), "autoAmp");
-                collectDataTextField(autoAmpMisses.getValueElement(), "autoAmpMisses");
-                collectDataTextField(autoSpeakerClose.getValueElement(), "autoSpeakerClose");
-                collectDataTextField(autoSpeakerMid.getValueElement(), "autoSpeakerMid");
-                collectDataTextField(autoSpeakerCloseMisses.getValueElement(), "autoSpeakerCloseMisses");
-                collectDataTextField(autoSpeakerMidMisses.getValueElement(), "autoSpeakerMidMisses");
+                collectDataTally(autoAmp, "autoAmp", "autoAmpMisses", true);
+                collectDataTally(autoSpeakerClose, "autoSpeakerClose", "autoSpeakerCloseMisses", true);
+                collectDataTally(autoSpeakerMid, "autoSpeakerMid", "autoSpeakerMidMisses", true);
+            }
+            case TELEOP -> {
+                collectDataPlusMinusBox(friendlyPickups, "friendlyPickups");
+                collectDataPlusMinusBox(neutralPickups, "neutralPickups");
+                collectDataPlusMinusBox(oppPickups, "oppPickups");
+                collectDataPlusMinusBox(sourcePickups, "sourcePickups");
+                collectDataTally(teleopSpeakerClose, "teleopSpeakerClose", "teleopSpeakerCloseMisses", true);
+                collectDataTally(teleopSpeakerMid, "teleopSpeakerMid", "teleopSpeakerMidMisses", true);
+                collectDataTally(teleopSpeakerFar, "teleopSpeakerFar", "teleopSpeakerFarMisses", true);
+                collectDataTally(teleopAmp, "teleopAmp", "teleopAmpMisses", true);
+                collectDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
+            }
+            case ENDGAME -> {
+                collectDataCheckBox(climb, "climb");
+                collectDataTextField(climbTime, "climbTime");
+                collectDataComboBox(climbPartners, "climbPartners");
+                collectDataCheckBox(spotlight, "spotlight");
             }
             case QUALITATIVE_NOTES -> {
                 collectDataCheckBox(shuttle, "shuttle");
@@ -227,14 +252,12 @@ public class FXMLController {
                 collectDataTextField(scoutName, "scoutName");
                 collectDataTextArea(comments, "comments");
             }
-
         }
     }
 
     //reloads data for a scene, called when loading scene in initialize() method
     private void reloadData() {
         switch (currPage) {
-            //TODO: add cases for each page
             case PREGAME -> {
                 reloadDataTextField(teamNum, "teamNum");
                 reloadDataTextField(matchNum, "matchNum");
@@ -242,6 +265,27 @@ public class FXMLController {
                 reloadDataCheckBox(preload, "preload");
             }
             case AUTON -> {
+                reloadDataCheckBox(mobility, "mobility");
+                reloadDataTally(autoAmp, "autoAmp", "autoAmpMisses", true);
+                reloadDataTally(autoSpeakerClose, "autoSpeakerClose", "autoSpeakerCloseMisses", true);
+                reloadDataTally(autoSpeakerMid, "autoSpeakerMid", "autoSpeakerMidMisses", true);
+            }
+            case TELEOP -> {
+                reloadDataPlusMinusBox(friendlyPickups, "friendlyPickups");
+                reloadDataPlusMinusBox(neutralPickups, "neutralPickups");
+                reloadDataPlusMinusBox(oppPickups, "oppPickups");
+                reloadDataPlusMinusBox(sourcePickups, "sourcePickups");
+                reloadDataTally(teleopSpeakerClose, "teleopSpeakerClose", "teleopSpeakerCloseMisses", true);
+                reloadDataTally(teleopSpeakerMid, "teleopSpeakerMid", "teleopSpeakerMidMisses", true);
+                reloadDataTally(teleopSpeakerFar, "teleopSpeakerFar", "teleopSpeakerFarMisses", true);
+                reloadDataTally(teleopAmp, "teleopAmp", "teleopAmpMisses", true);
+                reloadDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
+            }
+            case ENDGAME -> {
+                reloadDataCheckBox(climb, "climb");
+                reloadDataTextField(climbTime, "climbTime");
+                reloadDataIntegerComboBox(climbPartners, "climbPartners");
+                reloadDataCheckBox(spotlight, "spotlight");
             }
             case QUALITATIVE_NOTES -> {
                 reloadDataCheckBox(shuttle, "shuttle");
@@ -385,7 +429,7 @@ public class FXMLController {
     private void collectDataCheckBox(CheckBox checkBox, String key) {
         info.put(key, String.valueOf(checkBox.isSelected()));
     }
-    private void collectDataTextField(LimitedTextField textField, String key) {info.put(key, textField.getText());}
+    private void collectDataTextField(TextField textField, String key) {info.put(key, textField.getText());}
     private void collectDataArray(ArrayList<Integer> array, String key) {
         info.put(key, array.toString());
     }
@@ -403,10 +447,23 @@ public class FXMLController {
         info.put(key, value);
         toggleMap.put(key, index);
     }
-    private void collectDataComboBox(ComboBox<String> comboBox, String key) {
-        info.put(key, comboBox.getValue());
+    private <T> void collectDataComboBox(ComboBox<T> comboBox, String key) {
+        info.put(key, String.valueOf(comboBox.getValue()));
     }
-
+    private void collectDataPlusMinusBox(PlusMinusBox plusMinusBox, String key) {
+        info.put(key, plusMinusBox.getValueElement().getText());
+    }
+    private void collectDataTally(Tally tally, String firstKey, String secondKey, boolean sendMissesNotTotal) {
+        info.put(firstKey, String.valueOf(tally.getNumerator().getValueElement().getText()));
+        if (sendMissesNotTotal) {
+            int scored = Integer.parseInt(tally.getNumerator().getValueElement().getText());
+            int total = Integer.parseInt(tally.getDenominator().getValueElement().getText());
+            info.put(secondKey, String.valueOf(total - scored));
+        }
+        else {
+            info.put(secondKey, String.valueOf(tally.getDenominator().getValueElement().getText()));
+        }
+    }
     @FXML private void manipAutonPickupGrid(ActionEvent event) {
         Button btn = (Button) event.getSource();
         if (btn.getStyle().contains("-fx-background-color: white;")) {
@@ -428,7 +485,7 @@ public class FXMLController {
     private void reloadDataCheckBox(CheckBox checkBox, String key) {
         checkBox.setSelected(Boolean.parseBoolean(info.get(key)));
     }
-    private void reloadDataTextField(LimitedTextField textField, String key) {
+    private void reloadDataTextField(TextField textField, String key) {
         if (info.get(key) != null) textField.setText(info.get(key));
     }
     private void reloadDataRating(Rating rating, String key) {
@@ -440,8 +497,27 @@ public class FXMLController {
     private void reloadDataToggleGroup(ToggleGroup toggleGroup, String key) {
         if (toggleMap.get(key) != null) toggleGroup.selectToggle(toggleGroup.getToggles().get(toggleMap.get(key)));
     }
-    private void reloadDataComboBox(ComboBox<String> comboBox, String key) {
-        comboBox.setValue(info.get(key));
+    private void reloadDataPlusMinusBox(PlusMinusBox plusMinusBox, String key) {
+        if (info.get(key) != null) plusMinusBox.getValueElement().setText(info.get(key));
+    }
+
+    private void reloadDataStringComboBox(ComboBox<String> comboBox, String key) {
+        if (info.get(key) != null) comboBox.setValue(info.get(key));
+    }
+    private void reloadDataIntegerComboBox(ComboBox<Integer> comboBox, String key) {
+        if (info.get(key) != null) comboBox.setValue(Integer.valueOf(info.get(key)));
+    }
+    private void reloadDataTally(Tally tally, String firstKey, String secondKey, boolean getMissesNotTotal) {
+        if (info.get(firstKey) == null || info.get(secondKey) == null) return;
+        tally.getNumerator().getValueElement().setText(info.get(firstKey));
+        if (getMissesNotTotal) {
+            int scored = Integer.parseInt(info.get(firstKey));
+            int missed = Integer.parseInt(info.get(secondKey));
+            tally.getDenominator().getValueElement().setText(String.valueOf(scored + missed));
+        }
+        else {
+            tally.getDenominator().getValueElement().setText(info.get(secondKey));
+        }
     }
 
     private void reloadAutonPickupGrid(GridPane grid) {
@@ -503,7 +579,8 @@ public class FXMLController {
      * <p> {@code resetAll} - resets all forms of data storage and goes to first page
      * <p> {@code nextPage} - goes to next page
      * <p> {@code prevPage} - goes to previous page
-     * <p> {@code setPage} - general function for setting page number
+     * <p> {@code setPage} - goes to specified page
+     * <p> {@code letterbox} - resizes scene to fit screen
      */
     //implementations of setPage() for going to next and previous pages
     @FXML private void resetAll(ActionEvent event) throws IOException {
@@ -546,9 +623,8 @@ public class FXMLController {
         stage.show();
 
         letterbox(scene, (Pane) scene.getRoot());
-//        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitHint("");
 //        stage.setFullScreen(true);
-        stage.setMaximized(true);
         stage.setMaximized(true);
     }
 

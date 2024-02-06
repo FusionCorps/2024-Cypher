@@ -10,10 +10,11 @@
 .label {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
+    -fx-text-fill: #000000;
 }
 
 #title {
-    -fx-font-size:40px;
+    -fx-font-size:72px;
 }
 
 #mobility {

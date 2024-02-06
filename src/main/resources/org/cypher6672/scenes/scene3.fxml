@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import org.cypher6672.ui.PlusMinusBox?>
+<?import org.cypher6672.ui.Tally?>
+
+<Pane style="-fx-background-color: #74a9cf;" stylesheets="@../css/scene3.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+
+    <Button id="pageButton" layoutY="477.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+    <Button id="pageButton" layoutX="785.0" layoutY="477.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+
+    <Label id="teleop" layoutX="303.0" layoutY="8.0" text="Teleop" />
+
+    <Label id="pickups" layoutX="42.0" layoutY="102.0" />
+
+    <Label id="communityPickups" layoutX="84.0" layoutY="138.0" text="Friendly" />
+    <Label id="neutralPickups" layoutX="86.0" layoutY="186.0" prefHeight="96.0" prefWidth="162.0" text="Neutral Zone" textAlignment="CENTER" wrapText="true" />
+    <Label id="singlePickups" fx:id="sourcePickups" layoutX="480.0" layoutY="134.0" prefHeight="44.0" prefWidth="144.0" text="Source" textAlignment="CENTER" wrapText="true" />
+    <Label id="doublePickups" layoutX="465.0" layoutY="208.0" prefHeight="52.0" prefWidth="192.0" text="Opponent" textAlignment="CENTER" wrapText="true" />
+    <Label layoutX="33.0" layoutY="84.0" prefHeight="36.0" prefWidth="150.0" style="-fx-font-weight: bold; -fx-font-style: italic;" text="Pickups" textAlignment="CENTER" underline="true" wrapText="true">
+        <font>
+            <Font size="40.0" />
+        </font>
+    </Label>
+   <PlusMinusBox fx:id="friendlyPickups" layoutX="284.0" layoutY="131.0" />
+   <PlusMinusBox fx:id="neutralPickups" layoutX="284.0" layoutY="209.0" />
+   <PlusMinusBox layoutX="675.0" layoutY="131.0" />
+   <PlusMinusBox fx:id="oppPickups" layoutX="675.0" layoutY="209.0" />
+   <Line endX="819.6000366210938" layoutX="122.0" layoutY="282.0" startX="-100.0" />
+   <Label layoutX="27.0" layoutY="337.0" text="Amp" />
+   <Label layoutX="280.0" layoutY="299.0" prefHeight="96.0" prefWidth="118.0" text="Spk Close" textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="199.0" layoutY="434.0" prefHeight="79.0" prefWidth="72.0" text="Spk Mid" textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="465.0" layoutY="434.0" prefHeight="79.0" prefWidth="72.0" text="Spk Far" textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="611.0" layoutY="329.0" text="Trap" />
+   <Tally fx:id="teleopAmp" layoutX="107.0" layoutY="291.0" />
+   <Tally fx:id="teleopSpeakerClose" layoutX="410.0" layoutY="291.0" />
+   <Tally fx:id="teleopSpeakerMid" layoutX="284.0" layoutY="417.0" />
+   <Tally fx:id="teleopTrap" layoutX="721.0" layoutY="291.0" />
+   <Tally fx:id="teleopSpeakerFar" layoutX="548.0" layoutY="417.0" />
+</Pane>

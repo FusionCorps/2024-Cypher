@@ -10,51 +10,54 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<?import org.cypher6672.ui.PlusMinusBox?>
+<?import javafx.scene.text.Text?>
+<?import org.cypher6672.ui.Tally?>
 
 <Pane style="-fx-background-color: #a6bddb;" stylesheets="@../css/scene2.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
-   <CheckBox id="mobility" fx:id="mobility" layoutX="26.0" layoutY="80.0" mnemonicParsing="false" text="Mobility?" />
+   <CheckBox id="mobility" fx:id="mobility" layoutX="7.0" layoutY="86.0" mnemonicParsing="false" text="Mobility?" />
 
-   <Button id="pageButton" layoutX="913.0" layoutY="459.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+   <Button id="pageButton" layoutX="683.0" layoutY="514.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
-   <Button id="pageButton" layoutY="477.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+   <Button id="pageButton" layoutY="514.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
 
-   <Label id="auton" layoutX="336.0" layoutY="22.0" text="Auton" />
+   <Label id="title" layoutX="200.0" layoutY="14.0" text="Auton" />
 
 
-   <ImageView fx:id="autoPickupGrid" fitHeight="310.0" fitWidth="295.0" layoutX="683.0" layoutY="55.0" pickOnBounds="true">
+   <ImageView fx:id="autoPickupGrid" fitHeight="420.0" fitWidth="472.0" layoutX="383.0" layoutY="93.0" pickOnBounds="true">
       <Image url="@../images/autoPickupBlue.png" />
    </ImageView>
-   <GridPane fx:id="a_preGrid" layoutX="635.0" layoutY="107.0" prefHeight="256.0" prefWidth="95.0">
+   <GridPane fx:id="a_preGrid" layoutX="526.0" layoutY="120.0" prefHeight="360.0" prefWidth="330.0">
       <columnConstraints>
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       </columnConstraints>
       <rowConstraints>
-         <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="60.0" minHeight="0.0" prefHeight="15.200018310560468" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="60.0" minHeight="0.0" prefHeight="65.6" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="60.0" minHeight="0.0" prefHeight="17.599999999999994" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="72.0" minHeight="0.0" prefHeight="72.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="72.0" minHeight="0.0" prefHeight="72.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="72.0" minHeight="0.0" prefHeight="72.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="72.0" minHeight="0.0" prefHeight="72.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="72.0" minHeight="0.0" prefHeight="72.0" vgrow="SOMETIMES" />
       </rowConstraints>
-      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" />
-      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="2" GridPane.rowIndex="1" />
-      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="3" GridPane.rowIndex="2" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.halignment="LEFT" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+      <Button mnemonicParsing="false" onAction="#manipAutonPickupGrid" prefHeight="53.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: black;" userData="1" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
    </GridPane>
-   <Label id="pickupText" layoutX="592.0" layoutY="10.0" prefHeight="60.0" prefWidth="249.0" text="Note Pickups" textAlignment="CENTER" wrapText="true" />
-   <Button id="pageButton" layoutX="948.0" layoutY="156.0" mnemonicParsing="false" onAction="#flipAutonPickupImage" prefHeight="86.0" prefWidth="140.0" text="Flip Image" textAlignment="CENTER" wrapText="true">
+   <Label id="pickupText" layoutX="537.0" layoutY="54.0" prefHeight="19.0" prefWidth="249.0" text="Note Pickups" textAlignment="CENTER" wrapText="true" />
+   <Button id="pageButton" layoutX="397.0" layoutY="411.0" mnemonicParsing="false" onAction="#flipAutonPickupImage" prefHeight="86.0" prefWidth="140.0" text="Flip Image" textAlignment="CENTER" wrapText="true">
       <font>
          <Font size="20.0" />
       </font></Button>
-   <PlusMinusBox layoutX="221.0" layoutY="146.0" />
-   <Label layoutX="26.0" layoutY="132.0" prefHeight="78.0" prefWidth="151.0" text="Amp Scored" textAlignment="CENTER" wrapText="true" />
-   <PlusMinusBox layoutX="221.0" layoutY="225.0" />
-   <Label layoutX="26.0" layoutY="211.0" prefHeight="78.0" prefWidth="151.0" text="Amp Missed" textAlignment="CENTER" wrapText="true" />
-   <PlusMinusBox layoutX="544.0" layoutY="185.0" />
-   <Label layoutX="9.0" layoutY="299.0" prefHeight="78.0" prefWidth="196.0" text="Spk Close Scored" textAlignment="CENTER" wrapText="true" />
-   <PlusMinusBox layoutX="221.0" layoutY="313.0" />
-   <Label layoutX="9.0" layoutY="389.0" prefHeight="78.0" prefWidth="207.0" text="Spk Close Missed" textAlignment="CENTER" wrapText="true" />
-   <PlusMinusBox layoutX="221.0" layoutY="403.0" />
-   <Label layoutX="395.0" layoutY="400.0" prefHeight="78.0" prefWidth="207.0" text="Spk Mid Missed" textAlignment="CENTER" wrapText="true" />
-   <PlusMinusBox layoutX="662.0" layoutY="389.0" />
-   <Label layoutX="405.0" layoutY="313.0" prefHeight="78.0" prefWidth="151.0" text="Spk Mid Scored" textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="39.0" layoutY="285.0" prefHeight="78.0" prefWidth="119.0" text="Spk Close" textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="52.0" layoutY="415.0" prefHeight="78.0" prefWidth="72.0" text="Spk Mid" textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="63.0" layoutY="181.0" text="Amp" />
+   <Tally fx:id="autoAmp" layoutX="183.0" layoutY="143.0" />
+   <Tally fx:id="autoSpeakerClose" layoutX="183.0" layoutY="268.0" />
+   <Tally fx:id="autoSpeakerMid" layoutX="183.0" layoutY="398.0" />
 </Pane>

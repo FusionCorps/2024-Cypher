@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.Rating?>
 <?import org.cypher6672.ui.LimitedTextField?>
 
 <Pane minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #0570b0;" stylesheets="@../css/scene5.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
-    <Text id="quantitative" layoutX="195.0" layoutY="81.0" text="Qualitative" />
+    <Text id="quantitative" layoutX="241.0" layoutY="80.0" text="Qualitative" />
 
-    <Button id="pageButton" layoutX="20.0" layoutY="430.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
-    <Button id="pageButton" layoutX="935.0" layoutY="430.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+    <Button id="pageButton" layoutY="424.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+    <Button id="pageButton" layoutX="757.0" layoutY="424.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
-    <TextArea id="comments" fx:id="comments" layoutX="611.0" layoutY="108.0" prefHeight="231.0" prefWidth="485.0" promptText="Comments (fouls, strategy, anything else notable)" />
-
-    <Label id="driverSkill" layoutX="40.0" layoutY="117.0" text="Driver Skill/SPEED" />
-    <Rating fx:id="driver" layoutX="422.0" layoutY="119.0" rating="3.0" />
-    <LimitedTextField id="scoutNameTextField" fx:id="scoutName" layoutX="317.0" layoutY="201.0" onKeyPressed="#validateInput" prefHeight="45.0" prefWidth="253.0" />
-    <Label layoutX="40.0" layoutY="211.0" text="Scouter Name" />
+    <TextArea id="comments" fx:id="comments" layoutX="489.0" layoutY="105.0" prefHeight="261.0" prefWidth="425.0" promptText="Comments (fouls, strategy, anything else notable)" />
+    <LimitedTextField id="scoutNameTextField" fx:id="scoutName" layoutX="476.0" layoutY="380.0" onKeyPressed="#validateInput" prefHeight="45.0" prefWidth="253.0" />
+    <Label layoutX="195.0" layoutY="385.0" text="Scouter Name" />
+   <Label id="driverSkill" layoutX="49.0" layoutY="149.0" text="Shooter" />
+   <Rating fx:id="shooter" layoutX="292.0" layoutY="151.0" rating="3.0" />
+   <Label id="driverSkill" layoutX="71.0" layoutY="193.0" text="Intake" />
+   <Rating fx:id="intake" layoutX="292.0" layoutY="195.0" rating="3.0" />
+   <Label id="driverSkill" layoutX="67.0" layoutY="235.0" prefHeight="82.0" prefWidth="128.0" text="Driver Speed" textAlignment="CENTER" wrapText="true" />
+   <Rating fx:id="speed" layoutX="292.0" layoutY="260.0" rating="3.0" />
+   <Label id="driverSkill" layoutX="26.0" layoutY="330.0" text="Driver Skill" />
+   <Rating fx:id="driver" layoutX="292.0" layoutY="332.0" rating="3.0" />
+   <CheckBox fx:id="shuttle" layoutX="18.0" layoutY="96.0" mnemonicParsing="false" text="Shuttlebot?" />
+   <Line endX="331.3999938964844" layoutX="137.0" layoutY="192.0" startX="-100.0" />
+   <Line endX="331.3999938964844" layoutX="137.0" layoutY="229.0" startX="-100.0" />
+   <Line endX="331.3999938964844" layoutX="137.0" layoutY="324.0" startX="-100.0" />
 </Pane>
