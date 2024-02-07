@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.*;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -22,10 +23,10 @@ import org.cypher6672.util.CopyImageToClipBoard;
 import org.cypher6672.util.QRFuncs;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
-import java.awt.Toolkit;
 import java.io.*;
 import java.util.*;
 
@@ -39,6 +40,7 @@ public class FXMLController {
     private static HashMap<String, Integer> toggleMap = new HashMap<>() {{
         putIfAbsent("driveStation", null);
         putIfAbsent("startLocation", null);
+        putIfAbsent("climbPartners", null);
     }}; //stores toggle group values
 
     private static StringBuilder data = new StringBuilder(); //used to build data output string in sendInfo()
@@ -62,8 +64,9 @@ public class FXMLController {
     @FXML private CheckBox preload;
     //page 2
     @FXML private CheckBox mobility;
-    ArrayList<Integer> autonPickups;
-    @FXML private GridPane autoPickupGrid;
+    public static ArrayList<Integer> autonPickups = new ArrayList<>();
+    @FXML private GridPane autoPickupGridBlue;
+    @FXML private GridPane autoPickupGridRed;
     @FXML private Tally autoAmp;
     @FXML private Tally autoSpeakerClose;
     @FXML private Tally autoSpeakerMid;
@@ -80,7 +83,7 @@ public class FXMLController {
     //page 4
     @FXML private CheckBox climb;
     @FXML private LimitedTextField climbTime;
-    @FXML private ComboBox<Integer> climbPartners;
+    @FXML private ToggleGroup climbPartners;
     @FXML private CheckBox spotlight;
     //page 5
     @FXML private CheckBox shuttle;
@@ -141,6 +144,41 @@ public class FXMLController {
                     }
                 }
             });
+        } else if (currPage == Page.AUTON) {
+            autonPickupGridFlipped = startLocationImageFlipped; // sync auton pickup grid flip with start location flip
+            // show correct auton pickup PNG and grid based on alliance
+            if (autonPickupGridColor == 'b') {
+                autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlue.png").toString()));
+                autoPickupGridBlue.setVisible(true);
+                autoPickupGridRed.setVisible(false);
+                autoPickupGridBlue.setDisable(false);
+                autoPickupGridRed.setDisable(true);
+            } else {
+                autonPickupGridColor = 'r';
+                autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRed.png").toString()));
+                autoPickupGridBlue.setVisible(false);
+                autoPickupGridRed.setVisible(true);
+                autoPickupGridBlue.setDisable(true);
+                autoPickupGridRed.setDisable(false);
+            }
+        } else if (currPage == Page.ENDGAME) {
+            // enable climb time estimate, partner selection, and spotlight if climb is checked
+            climb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    climbTime.setDisable(false);
+                    spotlight.setDisable(false);
+                    ((RadioButton) climbPartners.getToggles().get(1)).setDisable(false);
+                    ((RadioButton) climbPartners.getToggles().get(2)).setDisable(false);
+                } else {
+                    climbTime.setDisable(true);
+                    spotlight.setSelected(false);
+                    spotlight.setDisable(true);
+                    climbTime.setText("0");
+                    climbPartners.selectToggle(climbPartners.getToggles().get(0));
+                    ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
+                    ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
+                }
+            });
         }
         //TODO: default null values based on page
         if (isNextPageClicked) {
@@ -152,12 +190,6 @@ public class FXMLController {
                     autoAmp.initNull();
                     autoSpeakerClose.initNull();
                     autoSpeakerMid.initNull();
-                    if (autonPickupGridColor == 'b') {
-                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlue.png").toString()));
-                    } else {
-                        autonPickupGridColor = 'r';
-                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRed.png").toString()));
-                    }
                 }
                 case TELEOP -> {
                     friendlyPickups.initNull();
@@ -171,8 +203,12 @@ public class FXMLController {
                     teleopTrap.initNull();
                 }
                 case ENDGAME -> {
+                    spotlight.setDisable(true);
+                    climbTime.setDisable(true);
+
                     climbTime.setText("0");
-                    climbPartners.setValue(0);
+                    ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
+                    ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
                 }
                 case QUALITATIVE_NOTES -> {
                     if (prevScouterName != null) scoutName.setText(prevScouterName);
@@ -251,7 +287,7 @@ public class FXMLController {
             }
             case AUTON -> {
                 collectDataCheckBox(mobility, "mobility");
-//                collectDataArray(autonPickups, "autonPickups");
+                collectDataArray(autonPickups, "autonPickups");
                 collectDataTally(autoAmp, "autoAmp", "autoAmpMisses", true);
                 collectDataTally(autoSpeakerClose, "autoSpeakerClose", "autoSpeakerCloseMisses", true);
                 collectDataTally(autoSpeakerMid, "autoSpeakerMid", "autoSpeakerMidMisses", true);
@@ -270,7 +306,7 @@ public class FXMLController {
             case ENDGAME -> {
                 collectDataCheckBox(climb, "climb");
                 collectDataTextField(climbTime, "climbTime");
-                collectDataComboBox(climbPartners, "climbPartners");
+                collectDataToggleGroup(climbPartners, "climbPartners");
                 collectDataCheckBox(spotlight, "spotlight");
             }
             case QUALITATIVE_NOTES -> {
@@ -300,6 +336,11 @@ public class FXMLController {
                 reloadDataTally(autoAmp, "autoAmp", "autoAmpMisses", true);
                 reloadDataTally(autoSpeakerClose, "autoSpeakerClose", "autoSpeakerCloseMisses", true);
                 reloadDataTally(autoSpeakerMid, "autoSpeakerMid", "autoSpeakerMidMisses", true);
+                if (autonPickupGridColor == 'b') {
+                    reloadAutonPickupGrid(autoPickupGridBlue);
+                } else {
+                    reloadAutonPickupGrid(autoPickupGridRed);
+                }
             }
             case TELEOP -> {
                 reloadDataPlusMinusBox(friendlyPickups, "friendlyPickups");
@@ -315,7 +356,7 @@ public class FXMLController {
             case ENDGAME -> {
                 reloadDataCheckBox(climb, "climb");
                 reloadDataTextField(climbTime, "climbTime");
-                reloadDataIntegerComboBox(climbPartners, "climbPartners");
+                reloadDataToggleGroup(climbPartners, "climbPartners");
                 reloadDataCheckBox(spotlight, "spotlight");
             }
             case QUALITATIVE_NOTES -> {
@@ -417,7 +458,6 @@ public class FXMLController {
         catch (Exception e) {
             System.out.println("file not found");
         }
-
     }
     
     /**
@@ -515,19 +555,15 @@ public class FXMLController {
     }
     @FXML private void manipAutonPickupGrid(ActionEvent event) {
         Button btn = (Button) event.getSource();
+
+
         if (btn.getStyle().contains("-fx-background-color: white;")) {
             btn.setStyle("-fx-background-color: green; -fx-border-color: black;");
-            autonPickups.add(Integer.valueOf(btn.getUserData().toString()));
+            FXMLController.autonPickups.add(Integer.valueOf(btn.getUserData().toString()));
         } else if (btn.getStyle().contains("-fx-background-color: green;")) {
-//            btn.setStyle("-fx-background-color: red; -fx-border-color: black;");
             btn.setStyle("-fx-background-color: white; -fx-border-color: black;");
-            autonPickups.remove(Integer.valueOf(btn.getUserData().toString()));
-//            autoFailedPickups.add(Integer.valueOf(btn.getUserData().toString()));
+            FXMLController.autonPickups.remove(Integer.valueOf(btn.getUserData().toString()));
         }
-//        else if (btn.getStyle().contains("-fx-background-color: red;")) {
-//            btn.setStyle("-fx-background-color: white; -fx-border-color: black;");
-//            autoFailedPickups.remove(Integer.valueOf(btn.getUserData().toString()));
-//        }
     }
 
     //used in reloadData() for specific types of data
@@ -575,8 +611,6 @@ public class FXMLController {
             Button btn = (Button) grid.getChildren().get(i);
             if (autonPickups.contains(Integer.valueOf(btn.getUserData().toString())))
                 btn.setStyle("-fx-background-color: green; -fx-border-color: black;");
-//            if (failedAutonPickups.contains(Integer.valueOf(btn.getUserData().toString())))
-//                btn.setStyle("-fx-background-color: red; -fx-border-color: black;");
         }
     }
 
@@ -613,27 +647,30 @@ public class FXMLController {
     }
 
     @FXML private void flipAutonPickupImage(ActionEvent ignoredEvent) {
-        if (autonPickupGridFlipped)
-            autoPickupGrid.rotateProperty().set(0);
-        else
-            autoPickupGrid.rotateProperty().set(180);
-
         if (autonPickupGridFlipped && autonPickupGridColor == 'b') {
+            autoPickupGridBlue.rotateProperty().set(0);
+            autoPickupGridBlue.translateXProperty().set(0);
             autonPickupGridFlipped = false;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupBlue.png").toString()));
         }
         else if (autonPickupGridFlipped && autonPickupGridColor == 'r') {
+            autoPickupGridRed.rotateProperty().set(0);
+            autoPickupGridRed.translateXProperty().set(0);
             autonPickupGridFlipped = false;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupRed.png").toString()));
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor == 'b') {
+            autoPickupGridBlue.rotateProperty().set(180);
+            autoPickupGridBlue.translateXProperty().set(-110);
             autonPickupGridFlipped = true;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupBlueReversed.png").toString()));
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor == 'r') {
+            autoPickupGridRed.rotateProperty().set(180);
+            autoPickupGridRed.translateXProperty().set(110);
             autonPickupGridFlipped = true;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupRedReversed.png").toString()));
@@ -658,8 +695,8 @@ public class FXMLController {
         info = new LinkedHashMap<>();
         toggleMap = new HashMap<>();
 
-        // resets UI to scene1
-        currPage = Page.PREGAME;
+        // resets UI to scene0
+        currPage = Page.BEGIN;
         nextPage(event);
     }
     @FXML private void nextPage(ActionEvent event) throws IOException {
@@ -687,13 +724,11 @@ public class FXMLController {
         stage.setTitle("6672 Cypher Page " + (currPage.ordinal()));
         stage.setScene(scene);
         stage.show();
-
         letterbox(scene, (Pane) scene.getRoot());
         stage.setFullScreenExitHint("");
         stage.setFullScreen(true);
-//        stage.setMaximized(true);
     }
-
+    
     private static void letterbox(final Scene scene, final Pane contentPane) {
         final double initWidth  = scene.getWidth();
         final double initHeight = scene.getHeight();

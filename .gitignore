@@ -25,3 +25,4 @@ replay_pid*
 
 .mvn/wrapper/maven-wrapper.jar
 target
+qrCode.png

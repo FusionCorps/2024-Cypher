@@ -28,15 +28,25 @@ public class Tally extends GridPane {
         this.add(denominator, 0, 2);
         this.add(fractionLine, 0, 1, 3, 1);
 
-        // when numerator increment, denominator increment
+        // when numerator increment, denominator increment, only if same already same values
         numerator.plus.setOnAction(e -> {
-            numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) + 1));
-            denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) + 1));
+            if (numerator.value.getText().equals(denominator.value.getText())) {
+                numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) + 1));
+                denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) + 1));
+            }
+            else {
+                numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) + 1));
+            }
         });
 
-        // restrict denominator from decrementing below numerator
+        // if denominator = numerator, decrement both together
         denominator.minus.setOnAction(e -> {
-            if (!denominator.value.getText().equals("0") && Integer.parseInt(denominator.value.getText()) > Integer.parseInt(numerator.value.getText())) {
+            if (denominator.value.getText().equals("0")) return;
+
+            if (Integer.parseInt(denominator.value.getText()) > Integer.parseInt(numerator.value.getText())) {
+                denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) - 1));
+            } else {
+                numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) - 1));
                 denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) - 1));
             }
         });

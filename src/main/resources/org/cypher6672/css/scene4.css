@@ -47,3 +47,10 @@
     -fx-padding: 5px;
     -fx-alignment: center;
 }
+
+.radio-button {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-text-fill: #000000;
+}
