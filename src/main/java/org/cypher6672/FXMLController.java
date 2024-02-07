@@ -43,7 +43,7 @@ public class FXMLController {
 
     private static StringBuilder data = new StringBuilder(); //used to build data output string in sendInfo()
     private static boolean isNextPageClicked = false; //used in initialize() to prevent data from being sent to info HashMap before user clicks next page
-    private static String autonPickupGridColor = "B"; //for changing color in auton pickup grid
+    private static char autonPickupGridColor = 'r'; //for flipping auton pickup grid
     private static boolean startLocationImageFlipped = false; //for flipping starting location image
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
@@ -63,6 +63,7 @@ public class FXMLController {
     //page 2
     @FXML private CheckBox mobility;
     ArrayList<Integer> autonPickups;
+    @FXML private GridPane autoPickupGrid;
     @FXML private Tally autoAmp;
     @FXML private Tally autoSpeakerClose;
     @FXML private Tally autoSpeakerMid;
@@ -120,36 +121,43 @@ public class FXMLController {
                     throw new RuntimeException(e);
                 }
             });
+
+            // add listener to driveStation to update startLocation img
+            driveStation.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    char alliance = newValue.getUserData().toString().charAt(0);
+                    if (alliance == 'b') {
+                        if (startLocationImageFlipped) {
+                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+                        } else {
+                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+                        }
+                    } else {
+                        if (startLocationImageFlipped) {
+                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+                        } else {
+                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+                        }
+                    }
+                }
+            });
         }
         //TODO: default null values based on page
         if (isNextPageClicked) {
             switch (currPage) {
                 case PREGAME -> {
                     if (matchNum.getText().isEmpty()) matchNum.setText(prevMatchNum);
-                    // add listener to driveStation to update startLocation img
-                    driveStation.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue != null) {
-                            char alliance = newValue.getUserData().toString().charAt(0);
-                            if (alliance == 'b') {
-                                if (startLocationImageFlipped) {
-                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
-                                } else {
-                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
-                                }
-                            } else {
-                                if (startLocationImageFlipped) {
-                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
-                                } else {
-                                    startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
-                                }
-                            }
-                        }
-                    });
                 }
                 case AUTON -> {
                     autoAmp.initNull();
                     autoSpeakerClose.initNull();
                     autoSpeakerMid.initNull();
+                    if (autonPickupGridColor == 'b') {
+                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlue.png").toString()));
+                    } else {
+                        autonPickupGridColor = 'r';
+                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRed.png").toString()));
+                    }
                 }
                 case TELEOP -> {
                     friendlyPickups.initNull();
@@ -204,7 +212,6 @@ public class FXMLController {
 
                     data.append("alliance=").append(alliance).append("|");
                     data.append("driveStation=").append(alliance).append(startLocation).append("|");
-                    data.append("startLocation=").append(startLocation).append("|");
                 }
                 else data.append(keyName).append("=").append(info.get(keyName)).append("|");
             }
@@ -237,7 +244,10 @@ public class FXMLController {
                 collectDataTextField(teamNum, "teamNum");
                 collectDataTextField(matchNum, "matchNum");
                 collectDataToggleGroup(driveStation, "driveStation");
+                collectDataToggleGroup(startLocation, "startLocation");
                 collectDataCheckBox(preload, "preload");
+
+                autonPickupGridColor = info.get("driveStation").charAt(0);
             }
             case AUTON -> {
                 collectDataCheckBox(mobility, "mobility");
@@ -282,6 +292,7 @@ public class FXMLController {
                 reloadDataTextField(teamNum, "teamNum");
                 reloadDataTextField(matchNum, "matchNum");
                 reloadDataToggleGroup(driveStation, "driveStation");
+                reloadDataToggleGroup(startLocation, "startLocation");
                 reloadDataCheckBox(preload, "preload");
             }
             case AUTON -> {
@@ -602,22 +613,27 @@ public class FXMLController {
     }
 
     @FXML private void flipAutonPickupImage(ActionEvent ignoredEvent) {
-        if (autonPickupGridFlipped && autonPickupGridColor.equals("B")) {
+        if (autonPickupGridFlipped)
+            autoPickupGrid.rotateProperty().set(0);
+        else
+            autoPickupGrid.rotateProperty().set(180);
+
+        if (autonPickupGridFlipped && autonPickupGridColor == 'b') {
             autonPickupGridFlipped = false;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupBlue.png").toString()));
         }
-        else if (autonPickupGridFlipped && autonPickupGridColor.equals("R")) {
+        else if (autonPickupGridFlipped && autonPickupGridColor == 'r') {
             autonPickupGridFlipped = false;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupRed.png").toString()));
         }
-        else if (!autonPickupGridFlipped && autonPickupGridColor.equals("B")) {
+        else if (!autonPickupGridFlipped && autonPickupGridColor == 'b') {
             autonPickupGridFlipped = true;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupBlueReversed.png").toString()));
         }
-        else if (!autonPickupGridFlipped && autonPickupGridColor.equals("R")) {
+        else if (!autonPickupGridFlipped && autonPickupGridColor == 'r') {
             autonPickupGridFlipped = true;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupRedReversed.png").toString()));
@@ -674,8 +690,8 @@ public class FXMLController {
 
         letterbox(scene, (Pane) scene.getRoot());
         stage.setFullScreenExitHint("");
-//        stage.setFullScreen(true);
-        stage.setMaximized(true);
+        stage.setFullScreen(true);
+//        stage.setMaximized(true);
     }
 
     private static void letterbox(final Scene scene, final Pane contentPane) {
