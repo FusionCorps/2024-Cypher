@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.cypher6672.ui.Tally?>
 
-<Pane style="-fx-background-color: #a6bddb;" stylesheets="@../css/scene2.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+<Pane prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #a6bddb;" stylesheets="@../css/scene2.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
    <CheckBox id="mobility" fx:id="mobility" layoutX="7.0" layoutY="86.0" mnemonicParsing="false" text="Mobility?" />
 
@@ -20,7 +20,7 @@
 
    <Button id="pageButton" layoutY="514.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
 
-   <Label id="title" layoutX="200.0" layoutY="14.0" text="Auton" />
+   <Label id="title" layoutX="212.0" layoutY="15.0" text="Auton" />
 
 
    <ImageView fx:id="autoPickupPNG" fitHeight="420.0" fitWidth="472.0" layoutX="386.0" layoutY="90.0" pickOnBounds="true">

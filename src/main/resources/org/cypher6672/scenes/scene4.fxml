@@ -8,22 +8,22 @@
 <?import javafx.scene.layout.Pane?>
 <?import org.cypher6672.ui.LimitedTextField?>
 
-<Pane minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #3690c0;" stylesheets="@../css/scene4.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
-    <Button id="pageButton" layoutY="386.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
-    <Button id="pageButton" layoutX="605.0" layoutY="386.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+<Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #3690c0;" stylesheets="@../css/scene4.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+    <Button id="pageButton" layoutY="512.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+    <Button id="pageButton" layoutX="683.0" layoutY="512.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
-    <Label id="endgame" layoutX="238.0" layoutY="21.0" text="Endgame" />
+    <Label id="endgame" layoutX="277.0" layoutY="30.0" text="Endgame" />
 
-    <CheckBox id="buddyClimb" fx:id="climb" layoutX="70.0" layoutY="95.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="188.0" text="Climbed?" />
-   <LimitedTextField id="climbTime" fx:id="climbTime" layoutX="437.0" layoutY="273.0" onKeyPressed="#validateInput" prefHeight="48.0" prefWidth="243.0" text="0" />
-   <Label layoutX="24.0" layoutY="246.0" prefHeight="101.0" prefWidth="383.0" text="Climb Time Est. (s) (Leave 0 if no climb) " textAlignment="CENTER" wrapText="true" />
-   <Label layoutX="397.0" layoutY="95.0" text="# Climb Partners" />
-   <CheckBox id="spotlight" fx:id="spotlight" layoutX="70.0" layoutY="164.0" mnemonicParsing="false" text="Spotlit?" />
-   <RadioButton layoutX="390.0" layoutY="163.0" mnemonicParsing="false" selected="true" text="0" userData="0">
+    <CheckBox id="buddyClimb" fx:id="climb" layoutX="54.0" layoutY="120.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="243.0" text="Climbed?" />
+   <LimitedTextField id="climbTime" fx:id="climbTime" layoutX="540.0" layoutY="377.0" onKeyPressed="#validateInput" prefHeight="48.0" prefWidth="243.0" text="0" />
+   <Label layoutX="38.0" layoutY="330.0" prefHeight="143.0" prefWidth="478.0" text="Climb Time Est. (s) (Leave 0 if no climb) " textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="390.0" layoutY="124.0" text="# Climb Partners" />
+   <CheckBox id="spotlight" fx:id="spotlight" layoutX="58.0" layoutY="222.0" mnemonicParsing="false" text="Spotlit?" />
+   <RadioButton layoutX="390.0" layoutY="203.0" mnemonicParsing="false" selected="true" text="0" userData="0">
       <toggleGroup>
          <ToggleGroup fx:id="climbPartners" />
       </toggleGroup>
    </RadioButton>
-   <RadioButton layoutX="626.0" layoutY="164.0" mnemonicParsing="false" text="2" userData="2" toggleGroup="$climbPartners" />
-   <RadioButton layoutX="515.0" layoutY="164.0" mnemonicParsing="false" text="1" userData="1" toggleGroup="$climbPartners" />
+   <RadioButton layoutX="683.0" layoutY="203.0" mnemonicParsing="false" text="2" toggleGroup="$climbPartners" userData="2" />
+   <RadioButton layoutX="540.0" layoutY="203.0" mnemonicParsing="false" text="1" toggleGroup="$climbPartners" userData="1" />
 </Pane>

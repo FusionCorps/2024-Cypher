@@ -6,7 +6,7 @@
 *{ -fx-font-family: "Mandatory Plaything";}
 
 .label {
-    -fx-font-size: 32px;
+    -fx-font-size: 40px;
     -fx-font-weight: bold;
     -fx-text-fill: #000000;
 }
@@ -29,7 +29,7 @@
 }
 
 .check-box {
-    -fx-font-size: 24px;
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
     -fx-background-color: #000000;
@@ -49,7 +49,7 @@
 }
 
 .radio-button {
-    -fx-font-size: 26px;
+    -fx-font-size: 40px;
     -fx-font-weight: bold;
     -fx-wrap-text: true;
     -fx-text-fill: #000000;

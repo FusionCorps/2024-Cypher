@@ -1,4 +1,5 @@
-//TODO: work on autonPickups arraylist in gui
+//TODO: CLIMB LISTENER DISABLE
+//TODO: leading zeroes in teamNum
 package org.cypher6672;
 
 import javafx.event.ActionEvent;

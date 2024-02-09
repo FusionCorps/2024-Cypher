@@ -4,8 +4,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0" prefWidth="240.0" stylesheets="@../css/scene0.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="240.0" stylesheets="@../css/scene0.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
    <Text id="title" layoutX="51.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cypher" />
-   <Button id="beginButton" layoutX="58.0" layoutY="44.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="52.0" prefWidth="125.0" text="Begin" />
-   <Text layoutX="32.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Made by Rishabh Rengarajan, FRC6672 2024" textAlignment="CENTER" wrappingWidth="177.0" />
+   <Button id="beginButton" layoutX="58.0" layoutY="54.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="52.0" prefWidth="125.0" text="Begin" />
+   <Text layoutX="32.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Made by Rishabh Rengarajan, FRC6672 2024" textAlignment="CENTER" wrappingWidth="177.0" />
 </Pane>
