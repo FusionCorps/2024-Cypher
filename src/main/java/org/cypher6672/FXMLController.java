@@ -425,7 +425,7 @@ public class FXMLController {
             teamNum.setRestrict("^(?:[1-9]\\d{0,4})?$"); // numerics only, no leading zeroes
             teamNum.setMaxLength(5);
         } else if (src.equals(matchNum)) {
-            matchNum.setIntegerField();
+            matchNum.setRestrict("^(?:[1-9]\\d{0,3})?$"); // no leading zeroes
             matchNum.setMaxLength(3);
         } else if (src.equals(scoutName)) {
             scoutName.setRestrict("[a-zA-Z ]");
