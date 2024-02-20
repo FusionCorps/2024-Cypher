@@ -1,5 +1,3 @@
-//TODO: CLIMB LISTENER DISABLE
-//TODO: leading zeroes in teamNum
 package org.cypher6672;
 
 import javafx.event.ActionEvent;
@@ -46,12 +44,11 @@ public class FXMLController {
 
     private static StringBuilder data = new StringBuilder(); //used to build data output string in sendInfo()
     private static boolean isNextPageClicked = false; //used in initialize() to prevent data from being sent to info HashMap before user clicks next page
-    private static char autonPickupGridColor = 'r'; //for flipping auton pickup grid
     private static boolean startLocationImageFlipped = false; //for flipping starting location image
+    private static char autonPickupGridColor = 'r'; //for flipping auton pickup grid
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
     private static String prevScouterName = null;
-    //TODO: save scouter name previously inputted during session
 
     //======================FXML DATA FIELDS======================
     //data for each page, variables are named the same as corresponding fx:ids in fxml files for consistency
@@ -105,83 +102,9 @@ public class FXMLController {
     @FXML private ImageView autoPickupPNG; //auton pickup grid image
 
     //=============================METHODS FOR CONTROLLING APP LOGIC=============================
-    //runs at loading of any scene, defaults null values and reloads previously entered data
+    // runs at loading of any scene, defaults null values and reloads previously entered data
     public void initialize() {
-        if (currPage == Page.PREGAME) {
-            //handles team name display
-            teamNum.setOnKeyTyped(event -> {
-                try {
-                    BufferedReader csvReader = new BufferedReader(new InputStreamReader(
-                            Objects.requireNonNull(this.getClass().getResourceAsStream("teamList.csv"))));
-                    String line;
-                    while ((line = csvReader.readLine()) != null) {
-                        String[] pair = line.split(",");
-                        if (pair[0].equals(teamNum.getText())) {
-                            teamNameText.setText("You are scouting: " + pair[1]);
-                            break;
-                        } else teamNameText.setText("This team isn't in the team database.");
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            // add listener to driveStation to update startLocation img
-            driveStation.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    char alliance = newValue.getUserData().toString().charAt(0);
-                    if (alliance == 'b') {
-                        if (startLocationImageFlipped) {
-                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
-                        } else {
-                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
-                        }
-                    } else {
-                        if (startLocationImageFlipped) {
-                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
-                        } else {
-                            startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
-                        }
-                    }
-                }
-            });
-        } else if (currPage == Page.AUTON) {
-            autonPickupGridFlipped = startLocationImageFlipped; // sync auton pickup grid flip with start location flip
-            // show correct auton pickup PNG and grid based on alliance
-            if (autonPickupGridColor == 'b') {
-                autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlue.png").toString()));
-                autoPickupGridBlue.setVisible(true);
-                autoPickupGridRed.setVisible(false);
-                autoPickupGridBlue.setDisable(false);
-                autoPickupGridRed.setDisable(true);
-            } else {
-                autonPickupGridColor = 'r';
-                autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRed.png").toString()));
-                autoPickupGridBlue.setVisible(false);
-                autoPickupGridRed.setVisible(true);
-                autoPickupGridBlue.setDisable(true);
-                autoPickupGridRed.setDisable(false);
-            }
-        } else if (currPage == Page.ENDGAME) {
-            // enable climb time estimate, partner selection, and spotlight if climb is checked
-            climb.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    climbTime.setDisable(false);
-                    spotlight.setDisable(false);
-                    ((RadioButton) climbPartners.getToggles().get(1)).setDisable(false);
-                    ((RadioButton) climbPartners.getToggles().get(2)).setDisable(false);
-                } else {
-                    climbTime.setDisable(true);
-                    spotlight.setSelected(false);
-                    spotlight.setDisable(true);
-                    climbTime.setText("0");
-                    climbPartners.selectToggle(climbPartners.getToggles().get(0));
-                    ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
-                    ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
-                }
-            });
-        }
-        //TODO: default null values based on page
+        // when the next page is clicked, default certain fields
         if (isNextPageClicked) {
             switch (currPage) {
                 case PREGAME -> {
@@ -204,12 +127,7 @@ public class FXMLController {
                     teleopTrap.initNull();
                 }
                 case ENDGAME -> {
-                    spotlight.setDisable(true);
-                    climbTime.setDisable(true);
-
-                    climbTime.setText("0");
-                    ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
-                    ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
+                    defaultDisableEndgameFields();
                 }
                 case QUALITATIVE_NOTES -> {
                     if (prevScouterName != null) scoutName.setText(prevScouterName);
@@ -219,8 +137,132 @@ public class FXMLController {
                 }
             }
         }
-
+        else { // going backward
+            if (currPage == Page.PREGAME) startLocationImageFlipped = autonPickupGridFlipped;
+        }
         reloadData();
+
+        // general things to run when a page is loaded
+        switch (currPage) {
+            case PREGAME -> {
+                //handles team name display
+                teamNum.setOnKeyTyped(event -> {
+                    try {
+                        BufferedReader csvReader = new BufferedReader(new InputStreamReader(
+                                Objects.requireNonNull(this.getClass().getResourceAsStream("teamList.csv"))));
+                        String line;
+                        while ((line = csvReader.readLine()) != null) {
+                            String[] pair = line.split(",");
+                            if (pair[0].equals(teamNum.getText())) {
+                                teamNameText.setText("You are scouting: " + pair[1]);
+                                break;
+                            } else teamNameText.setText("This team isn't in the team database.");
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                // display correct startLocation image based on flip and color
+                if (((String) driveStation.getSelectedToggle().getUserData()).charAt(0) == 'b') {
+                    if (startLocationImageFlipped) {
+                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+                    } else {
+                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+                    }
+                } else {
+                    if (startLocationImageFlipped) {
+                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+                    } else {
+                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+                    }
+                }
+
+                // add listener to driveStation to update startLocation img
+                driveStation.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        char alliance = newValue.getUserData().toString().charAt(0);
+                        if (alliance == 'b') {
+                            if (startLocationImageFlipped) {
+                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+                            } else {
+                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+                            }
+                        } else {
+                            if (startLocationImageFlipped) {
+                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+                            } else {
+                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+                            }
+                        }
+                    }
+                });
+            }
+            case AUTON -> {
+                autonPickupGridFlipped = startLocationImageFlipped; // sync auton pickup grid flip with start location flip
+                // show correct auton pickup PNG and grid based on alliance
+                if (autonPickupGridColor == 'b') {
+                    autoPickupGridBlue.setVisible(true);
+                    autoPickupGridRed.setVisible(false);
+                    autoPickupGridBlue.setDisable(false);
+                    autoPickupGridRed.setDisable(true);
+                    if (autonPickupGridFlipped) {
+                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlueReversed.png").toString()));
+                        autoPickupGridBlue.rotateProperty().set(180);
+                        autoPickupGridBlue.translateXProperty().set(-110);
+                    } else {
+                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlue.png").toString()));
+                        autoPickupGridBlue.rotateProperty().set(0);
+                        autoPickupGridBlue.translateXProperty().set(0);
+                    }
+                } else {
+                    autoPickupGridBlue.setVisible(false);
+                    autoPickupGridRed.setVisible(true);
+                    autoPickupGridBlue.setDisable(true);
+                    autoPickupGridRed.setDisable(false);
+                    if (autonPickupGridFlipped) {
+                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRedReversed.png").toString()));
+                        autoPickupGridRed.rotateProperty().set(180);
+                        autoPickupGridRed.translateXProperty().set(110);
+                    }
+                    else {
+                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRed.png").toString()));
+                        autoPickupGridRed.rotateProperty().set(0);
+                        autoPickupGridRed.translateXProperty().set(0);
+                    }
+                }
+            }
+            case ENDGAME -> {
+                if (!climb.isSelected()) defaultDisableEndgameFields();
+
+                // enable climb time estimate, partner selection, and spotlight if climb is checked
+                climb.selectedProperty().addListener((observable, oldValue, selected) -> {
+                    if (selected) {
+                        climbTime.setDisable(false);
+                        spotlight.setDisable(false);
+                        ((RadioButton) climbPartners.getToggles().get(1)).setDisable(false);
+                        ((RadioButton) climbPartners.getToggles().get(2)).setDisable(false);
+                    } else {
+                        climbTime.setDisable(true);
+                        spotlight.setSelected(false);
+                        spotlight.setDisable(true);
+                        climbTime.setText("0");
+                        climbPartners.selectToggle(climbPartners.getToggles().get(0));
+                        ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
+                        ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
+                    }
+                });
+            }
+        }
+    }
+
+    private void defaultDisableEndgameFields() {
+        spotlight.setDisable(true);
+        climbTime.setDisable(true);
+
+        climbTime.setText("0");
+        ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
+        ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
     }
 
     /**
@@ -380,7 +422,7 @@ public class FXMLController {
     @FXML private void validateInput(KeyEvent keyEvent) {
         Object src = keyEvent.getSource(); // element that got input
         if (src.equals(teamNum)) {
-            teamNum.setIntegerField();
+            teamNum.setRestrict("^(?:[1-9]\\d{0,4})?$"); // numerics only, no leading zeroes
             teamNum.setMaxLength(5);
         } else if (src.equals(matchNum)) {
             matchNum.setIntegerField();
@@ -521,6 +563,7 @@ public class FXMLController {
     }
     private void collectDataTextField(TextField textField, String key) {info.put(key, textField.getText());}
     private void collectDataArray(ArrayList<Integer> array, String key) {
+        Collections.sort(array);
         info.put(key, array.toString());
     }
     private void collectDataRating(Rating rating, String key) {
@@ -664,14 +707,14 @@ public class FXMLController {
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor == 'b') {
             autoPickupGridBlue.rotateProperty().set(180);
-            autoPickupGridBlue.translateXProperty().set(-110);
+            autoPickupGridBlue.translateXProperty().set(-110); // fudge factored to look right
             autonPickupGridFlipped = true;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupBlueReversed.png").toString()));
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor == 'r') {
             autoPickupGridRed.rotateProperty().set(180);
-            autoPickupGridRed.translateXProperty().set(110);
+            autoPickupGridRed.translateXProperty().set(110); // fudge factored to look right
             autonPickupGridFlipped = true;
             autoPickupPNG.setImage(new Image(getClass().getResource(
                     "images/autoPickupRedReversed.png").toString()));
@@ -721,7 +764,6 @@ public class FXMLController {
         FXMLLoader loader = new FXMLLoader(FXMLController.class.getResource("scenes/scene" + (currPage.ordinal()) + ".fxml"));
         //if next line causes errors, check syntax in all fxml files
         Scene scene = new Scene(loader.load());
-
         stage.setTitle("6672 Cypher Page " + (currPage.ordinal()));
         stage.setScene(scene);
         stage.show();

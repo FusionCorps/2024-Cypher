@@ -67,15 +67,6 @@
 }
 
 #outputString {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-alignment: left;
-    -fx-stroke-type: outside;
-    -fx-wrap-text: true;
-    -fx-text-fill: white;
+    -fx-font-size: 5px;
     -fx-font-family: "Times New Roman";
-    -fx-background-color: black;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
-    -fx-alignment: center;
 }

@@ -16,9 +16,9 @@
 
 <Pane id="selectionButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #d0d1e6;" stylesheets="@../css/scene1.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
-   <Label id="pregame" layoutX="128.0" layoutY="15.0" text="Pregame" />
-   <LimitedTextField id="textField" fx:id="matchNum" layoutX="261.0" layoutY="159.0" onKeyPressed="#validateInput" prefHeight="40.0" prefWidth="118.0" />
-   <LimitedTextField id="textField" fx:id="teamNum" layoutX="261.0" layoutY="92.0" onKeyPressed="#validateInput" prefHeight="40.0" prefWidth="118.0" />
+   <Label id="pregame" layoutX="272.0" layoutY="14.0" text="Pregame" />
+   <LimitedTextField id="textField" fx:id="matchNum" layoutX="306.0" layoutY="169.0" onKeyPressed="#validateInput" prefHeight="40.0" prefWidth="135.0" />
+   <LimitedTextField id="textField" fx:id="teamNum" layoutX="306.0" layoutY="117.0" onKeyPressed="#validateInput" prefHeight="40.0" prefWidth="135.0" />
 
    <Button id="pageButton" layoutY="512.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="178.0" text="Prev Page" />
    <Button id="pageButton" layoutX="683.0" layoutY="512.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
@@ -26,13 +26,13 @@
    <ImageView fx:id="startLocationPNG" fitHeight="380.0" fitWidth="318.0" layoutX="507.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../images/2024-field-red.png" />
    </ImageView>
-   <Button id="pageButton" layoutX="561.0" layoutY="400.0" mnemonicParsing="false" onAction="#flipStartLocationImage" prefHeight="81.0" prefWidth="216.0" text="Flip Image" textAlignment="CENTER" wrapText="true" />
-   <Text id="teamNameText" fx:id="teamNameText" layoutX="12.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="479.800048828125" />
-   <Label layoutX="12.0" layoutY="336.0" prefHeight="103.0" prefWidth="193.0" text="Driver Station" textAlignment="CENTER" wrapText="true">
+   <Button id="pageButton" layoutX="566.0" layoutY="405.0" mnemonicParsing="false" onAction="#flipStartLocationImage" prefHeight="75.0" prefWidth="199.0" text="Flip Image" textAlignment="CENTER" wrapText="true" />
+   <Text id="teamNameText" fx:id="teamNameText" layoutX="11.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="485.40008544921875" />
+   <Label layoutX="12.0" layoutY="396.0" prefHeight="103.0" prefWidth="193.0" text="Driver Station" textAlignment="CENTER" wrapText="true">
    </Label>
-   <Label layoutX="20.0" layoutY="90.0" text="Team Num" />
-   <Label layoutX="4.0" layoutY="157.0" text="Match Num" />
-   <GridPane layoutX="207.0" layoutY="323.0" prefHeight="119.0" prefWidth="199.0">
+   <Label layoutX="51.0" layoutY="115.0" text="Team Num" />
+   <Label layoutX="20.0" layoutY="167.0" text="Match Num" />
+   <GridPane layoutX="207.0" layoutY="383.0" prefHeight="119.0" prefWidth="199.0">
      <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" maxWidth="119.99998779296875" minWidth="10.0" prefWidth="116.80003662109375" />
        <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.9999755859375" minWidth="10.0" prefWidth="114.39996337890624" />
@@ -55,8 +55,8 @@
          <RadioButton id="selectionButton" mnemonicParsing="false" style="-fx-text-fill: blue;" text="B3" toggleGroup="$driveStation" userData="b3" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       </children>
    </GridPane>
-   <CheckBox fx:id="preload" layoutX="193.0" layoutY="460.0" mnemonicParsing="false" text="Preloaded?" />
-   <GridPane layoutX="256.0" layoutY="213.0" prefHeight="103.0" prefWidth="166.0">
+   <CheckBox fx:id="preload" layoutX="17.0" layoutY="58.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="226.0" text="Preloaded?" />
+   <GridPane layoutX="253.0" layoutY="269.0" prefHeight="103.0" prefWidth="166.0">
       <columnConstraints>
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.20001220703125" minWidth="10.0" prefWidth="79.80001831054688" />
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.20001220703125" minWidth="10.0" prefWidth="79.80001831054688" />
@@ -76,5 +76,5 @@
          <RadioButton id="selectionButton" mnemonicParsing="false" text="3" toggleGroup="$startLocation" userData="3" GridPane.rowIndex="1" />
       </children>
    </GridPane>
-   <Label layoutX="20.0" layoutY="213.0" prefHeight="103.0" prefWidth="216.0" text="Start Location" textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="17.0" layoutY="269.0" prefHeight="103.0" prefWidth="216.0" text="Start Location" textAlignment="CENTER" wrapText="true" />
 </Pane>
