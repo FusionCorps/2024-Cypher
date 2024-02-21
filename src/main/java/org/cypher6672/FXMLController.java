@@ -770,6 +770,7 @@ public class FXMLController {
         letterbox(scene, (Pane) scene.getRoot());
 
         stage.setFullScreenExitHint("");
+        stage.centerOnScreen();
         stage.setMaximized(true);
         stage.setMaximized(false);
         stage.setMaximized(true);

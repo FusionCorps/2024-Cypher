@@ -24,7 +24,7 @@
    <Rating fx:id="shooter" layoutX="272.0" layoutY="165.0" rating="3.0" />
    <Label id="driverSkill" layoutX="71.0" layoutY="240.0" text="Intake" />
    <Rating fx:id="intake" layoutX="272.0" layoutY="241.0" rating="3.0" />
-   <Label id="driverSkill" layoutX="74.0" layoutY="317.0" prefHeight="45.0" prefWidth="114.0" text="Speed" textAlignment="CENTER" wrapText="true" />
+   <Label id="driverSkill" layoutX="74.0" layoutY="317.0" prefHeight="45.0" prefWidth="127.0" text="Speed" textAlignment="CENTER" wrapText="true" />
    <Rating fx:id="speed" layoutX="272.0" layoutY="317.0" rating="3.0" />
    <Label id="driverSkill" layoutX="21.0" layoutY="394.0" text="Driver Skill" />
    <Rating fx:id="driver" layoutX="272.0" layoutY="396.0" rating="3.0" />

@@ -8,7 +8,7 @@
 
 <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #034e7b;" stylesheets="@../css/scene6.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
-    <Button id="sendInfoButton" layoutX="285.0" layoutY="13.0" onAction="#sendInfo" prefHeight="75.0" prefWidth="350.0" text="Generate QR" />
+    <Button id="sendInfoButton" layoutX="267.0" layoutY="13.0" onAction="#sendInfo" prefHeight="75.0" prefWidth="366.0" text="Generate QR" />
 
     <Button id="resetButton" layoutX="633.0" layoutY="415.0" onAction="#confirmReset" prefHeight="143.0" prefWidth="204.0" text="Start Over" />
 
@@ -23,7 +23,7 @@
 
     <Button id="clipboardButton" layoutX="641.0" layoutY="271.0" onAction="#copyToClipboard" prefHeight="132.0" prefWidth="189.0" text="Copy Data (QR Code)" />
 
-    <Text id="reminderBox" fx:id="reminderBox" layoutX="14.0" layoutY="41.0" text="You Scouted Team XXXX." wrappingWidth="264.79998779296875" />
+    <Text id="reminderBox" fx:id="reminderBox" layoutX="10.0" layoutY="41.0" text="You Scouted Team XXXX." wrappingWidth="264.79998779296875" />
 
     <Text id="outputString" fx:id="dataStr" layoutX="6.0" layoutY="568.0" wrappingWidth="846.1369209289551" />
 </Pane>
