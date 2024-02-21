@@ -768,8 +768,9 @@ public class FXMLController {
         stage.setScene(scene);
         stage.show();
         letterbox(scene, (Pane) scene.getRoot());
+
         stage.setFullScreenExitHint("");
-        stage.setFullScreen(true);
+        stage.setMaximized(true);
     }
     
     private static void letterbox(final Scene scene, final Pane contentPane) {
