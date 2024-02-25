@@ -770,16 +770,27 @@ public class FXMLController {
         letterbox(scene, (Pane) scene.getRoot());
 
         stage.setFullScreenExitHint("");
+        double reqHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight()-50;
+//        stage.setMinWidth(reqHeight * 1.5);
+        stage.setMaxWidth(reqHeight * 1.5);
+//        stage.setMinHeight(reqHeight);
+        stage.setMaxHeight(reqHeight);
+        stage.setFullScreen(true);
+
         stage.centerOnScreen();
-        stage.setMaximized(true);
-        stage.setMaximized(false);
-        stage.setMaximized(true);
+        stage.setAlwaysOnTop(true);
+
+//        stage.setRenderScaleX(1.5);
+//        stage.setRenderScaleY(1.5);
+//        stage.setFullScreen(true);
+
     }
     
     private static void letterbox(final Scene scene, final Pane contentPane) {
         final double initWidth  = scene.getWidth();
         final double initHeight = scene.getHeight();
         final double ratio      = initWidth / initHeight;
+        System.out.println(ratio);
 
         SceneSizeChangeListener sizeListener = new SceneSizeChangeListener(scene, ratio, initHeight, initWidth, contentPane);
         scene.widthProperty().addListener(sizeListener);
