@@ -11,11 +11,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.controlsfx.control.Rating;
 import org.cypher6672.ui.*;
 import org.cypher6672.util.CopyImageToClipBoard;
@@ -100,6 +102,14 @@ public class FXMLController {
     private BufferedImage qrImage;
     @FXML private ImageView startLocationPNG; //starting location image
     @FXML private ImageView autoPickupPNG; //auton pickup grid image
+
+
+    private static final DisplayMode bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDisplayMode();
+
+    public static final double screenHeight = bounds.getHeight();
+    public static final double screenWidth = bounds.getWidth();
+    public static final double desiredHeight = screenHeight - 100;
+    public static final double desiredWidth = desiredHeight * 1.5; // 3:2 aspect ratio
 
     //=============================METHODS FOR CONTROLLING APP LOGIC=============================
     // runs at loading of any scene, defaults null values and reloads previously entered data
@@ -431,7 +441,7 @@ public class FXMLController {
             scoutName.setRestrict("[a-zA-Z ]");
             scoutName.setMaxLength(30);
         } else if (src.equals(climbTime)) {
-            climbTime.setIntegerField();
+            climbTime.setRestrict(("^(?:[1-9]\\d{0,4})?$"));
             climbTime.setMaxLength(3);
         } else if (src.equals(comments)) {
             // restrict '|' character from being entered in text area, and sets reasonable max length
@@ -731,8 +741,13 @@ public class FXMLController {
     //implementations of setPage() for going to next and previous pages
     @FXML private void resetAll(ActionEvent event) throws IOException {
         // increments match number for next match
-        prevMatchNum = String.valueOf(Integer.parseInt(info.get("matchNum")) + 1);
-        prevScouterName = info.get("scoutName");
+        try {
+            prevMatchNum = String.valueOf(Integer.parseInt(info.get("matchNum")) + 1);
+            prevScouterName = info.get("scoutName");
+        } catch (Exception e) {
+            prevMatchNum = "1";
+            prevScouterName = null;
+        }
 
         // reset data storage variables
         data = new StringBuilder();
@@ -760,40 +775,77 @@ public class FXMLController {
 
     //changes page to the scene specified by sceneIndex
     public static void setPage(Stage stage, Page page) throws IOException {
+        if (!stage.isShowing()) stage.show();
+
         currPage = page;
+        stage.setTitle("6672 Cypher Page " + (currPage.ordinal()));
         FXMLLoader loader = new FXMLLoader(FXMLController.class.getResource("scenes/scene" + (currPage.ordinal()) + ".fxml"));
         //if next line causes errors, check syntax in all fxml files
         Scene scene = new Scene(loader.load());
-        stage.setTitle("6672 Cypher Page " + (currPage.ordinal()));
         stage.setScene(scene);
-        stage.show();
-        letterbox(scene, (Pane) scene.getRoot());
+        stage.sizeToScene();
 
-        stage.setFullScreenExitHint("");
-        double reqHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight()-50;
-//        stage.setMinWidth(reqHeight * 1.5);
-        stage.setMaxWidth(reqHeight * 1.5);
-//        stage.setMinHeight(reqHeight);
-        stage.setMaxHeight(reqHeight);
-        stage.setFullScreen(true);
+        double reqHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+
+        letterbox(scene, (Pane) scene.getRoot());
+        stage.setWidth(reqHeight * 1.5);
+        stage.setHeight(reqHeight);
 
         stage.centerOnScreen();
-        stage.setAlwaysOnTop(true);
-
-//        stage.setRenderScaleX(1.5);
-//        stage.setRenderScaleY(1.5);
-//        stage.setFullScreen(true);
-
+//        stage.setAlwaysOnTop(true);
     }
-    
+
+    /**
+     * Resizes the scene elements as the stage changes size.
+     * ALways call this method after showing the stage, so that scene.getWidth() and scene.getHeight() are valid.
+     * @param scene
+     * @param contentPane
+     */
     private static void letterbox(final Scene scene, final Pane contentPane) {
         final double initWidth  = scene.getWidth();
         final double initHeight = scene.getHeight();
         final double ratio      = initWidth / initHeight;
-        System.out.println(ratio);
 
         SceneSizeChangeListener sizeListener = new SceneSizeChangeListener(scene, ratio, initHeight, initWidth, contentPane);
         scene.widthProperty().addListener(sizeListener);
         scene.heightProperty().addListener(sizeListener);
+    }
+
+    @FXML private void runUserKeybinds(KeyEvent event) throws IOException {
+        if (event.isControlDown()) {
+            if (event.getCode() == KeyCode.ENTER && currPage != Page.QR_CODE) {
+                nextPage(new ActionEvent());
+            }
+            else if (event.getCode() == KeyCode.BACK_SPACE && currPage != Page.BEGIN) {
+                prevPage(new ActionEvent());
+            }
+            else if (event.getCode() == KeyCode.R) {
+                resetAll(new ActionEvent());
+            }
+            else if (event.getCode() == KeyCode.DIGIT1) {
+                collectData();
+                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.PREGAME);
+            }
+            else if (event.getCode() == KeyCode.DIGIT2) {
+                collectData();
+                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.AUTON);
+            }
+            else if (event.getCode() == KeyCode.DIGIT3) {
+                collectData();
+                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.TELEOP);
+            }
+            else if (event.getCode() == KeyCode.DIGIT4) {
+                collectData();
+                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.ENDGAME);
+            }
+            else if (event.getCode() == KeyCode.DIGIT5) {
+                collectData();
+                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.QUALITATIVE_NOTES);
+            }
+            else if (event.getCode() == KeyCode.DIGIT6) {
+                collectData();
+                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.QR_CODE);
+            }
+        }
     }
 }

@@ -28,9 +28,16 @@ package org.cypher6672;
  **/
 
 import javafx.application.Application;
+import javafx.application.ConditionalFeature;
+import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.RadialGradient;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -38,6 +45,15 @@ public class AppMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+//        Stage backStage = new Stage(StageStyle.UNDECORATED);
+//        Scene backScene = new Scene(new Pane(), 1, 1);
+//        backScene.setFill(Color.BLACK);
+//
+//        backStage.setScene(backScene);
+//        backStage.setMaximized(true);
+//        backStage.show();
+
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         FXMLController.setPage(primaryStage, FXMLController.Page.BEGIN);
     }
 

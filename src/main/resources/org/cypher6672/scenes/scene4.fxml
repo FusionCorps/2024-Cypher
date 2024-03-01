@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import org.cypher6672.ui.LimitedTextField?>
 
-<Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #3690c0;" stylesheets="@../css/scene4.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
-    <Button id="pageButton" layoutY="512.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
-    <Button id="pageButton" layoutX="683.0" layoutY="512.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+<Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #3690c0;" stylesheets="@../css/scene4.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController" onKeyPressed="#runUserKeybinds">
+    <Button id="pageButton" layoutY="513.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+    <Button id="pageButton" layoutX="683.0" layoutY="513.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
     <Label id="endgame" layoutX="277.0" layoutY="30.0" text="Endgame" />
 

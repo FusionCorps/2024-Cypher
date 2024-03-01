@@ -14,14 +14,14 @@
 <?import javafx.scene.text.Text?>
 <?import org.cypher6672.ui.LimitedTextField?>
 
-<Pane id="selectionButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #d0d1e6;" stylesheets="@../css/scene1.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
+<Pane id="selectionButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #d0d1e6;" stylesheets="@../css/scene1.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController" onKeyPressed="#runUserKeybinds">
 
    <Label id="pregame" layoutX="272.0" layoutY="14.0" text="Pregame" />
    <LimitedTextField id="textField" fx:id="matchNum" layoutX="306.0" layoutY="169.0" onKeyPressed="#validateInput" prefHeight="40.0" prefWidth="135.0" />
    <LimitedTextField id="textField" fx:id="teamNum" layoutX="306.0" layoutY="117.0" onKeyPressed="#validateInput" prefHeight="40.0" prefWidth="135.0" />
 
-   <Button id="pageButton" layoutY="512.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="178.0" text="Prev Page" />
-   <Button id="pageButton" layoutX="683.0" layoutY="512.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+   <Button id="pageButton" layoutY="513.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="178.0" text="Prev Page" />
+   <Button id="pageButton" layoutX="683.0" layoutY="513.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
    <ImageView fx:id="startLocationPNG" fitHeight="380.0" fitWidth="318.0" layoutX="507.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../images/2024-field-red.png" />
