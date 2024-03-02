@@ -139,7 +139,7 @@ public class FXMLController {
                     if (prevScouterName != null) scoutName.setText(prevScouterName);
                 }
                 case QR_CODE -> {
-                    reminderBox.setText("Team Number: " + info.get("teamNum"));
+                    reminderBox.setText(info.get("scoutName") + " - " + info.get("teamNum"));;
                 }
             }
         }
@@ -423,7 +423,7 @@ public class FXMLController {
             }
             case QR_CODE -> {
                 if (info.get("teamNum") != null)
-                    reminderBox.setText(info.get("scoutName") + " Scouted Team #" + info.get("teamNum") + ".");
+                    reminderBox.setText(info.get("scoutName") + " - " + info.get("teamNum"));
             }
         }
     }

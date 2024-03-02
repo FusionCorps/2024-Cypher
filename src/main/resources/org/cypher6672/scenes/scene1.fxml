@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.text.Text?>
 <?import org.cypher6672.ui.LimitedTextField?>
 
-<Pane id="selectionButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #d0d1e6;" stylesheets="@../css/scene1.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController" onKeyPressed="#runUserKeybinds">
+<Pane id="selectionButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#runUserKeybinds" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #d0d1e6;" stylesheets="@../css/scene1.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
    <Label id="pregame" layoutX="272.0" layoutY="14.0" text="Pregame" />
    <LimitedTextField id="textField" fx:id="matchNum" layoutX="306.0" layoutY="169.0" onKeyPressed="#validateInput" prefHeight="40.0" prefWidth="135.0" />
@@ -77,4 +78,12 @@
       </children>
    </GridPane>
    <Label layoutX="17.0" layoutY="269.0" prefHeight="103.0" prefWidth="216.0" text="Start Location" textAlignment="CENTER" wrapText="true" />
+   <ImageView fitHeight="44.0" fitWidth="44.0" layoutX="13.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+      <viewport>
+         <Rectangle2D />
+      </viewport>
+      <image>
+         <Image url="@../images/FusionCorpsLogo.png" />
+      </image>
+   </ImageView>
 </Pane>

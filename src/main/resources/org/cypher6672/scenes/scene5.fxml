@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.Rating?>
 <?import org.cypher6672.ui.LimitedTextField?>
 
-<Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #0570b0;" stylesheets="@../css/scene5.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController" onKeyTyped="#runUserKeybinds">
+<Pane minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#runUserKeybinds" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #0570b0;" stylesheets="@../css/scene5.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
     <Text id="quantitative" layoutX="181.0" layoutY="74.0" text="Qualitative" />
 
@@ -32,4 +35,12 @@
    <Line endX="331.3999938964844" layoutX="123.0" layoutY="221.0" startX="-100.0" />
    <Line endX="331.3999938964844" layoutX="123.0" layoutY="298.0" startX="-100.0" />
    <Line endX="331.3999938964844" layoutX="123.0" layoutY="383.0" startX="-100.0" />
+   <ImageView fitHeight="44.0" fitWidth="44.0" layoutX="23.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+      <viewport>
+         <Rectangle2D />
+      </viewport>
+      <image>
+         <Image url="@../images/FusionCorpsLogo.png" />
+      </image>
+   </ImageView>
 </Pane>
