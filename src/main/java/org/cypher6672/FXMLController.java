@@ -51,6 +51,8 @@ public class FXMLController {
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
     private static String prevScouterName = null;
+    private static String prevTeamNum = null;
+
 
     //======================FXML DATA FIELDS======================
     //data for each page, variables are named the same as corresponding fx:ids in fxml files for consistency
@@ -113,6 +115,7 @@ public class FXMLController {
             switch (currPage) {
                 case PREGAME -> {
                     if (matchNum.getText().isEmpty()) matchNum.setText(prevMatchNum);
+                    if (teamNum.getText().isEmpty()) teamNum.setText(prevTeamNum);
                 }
                 case AUTON -> {
                     autoAmp.initNull();
@@ -665,11 +668,14 @@ public class FXMLController {
 
     //displays confirmation popup before resetting app
     @FXML private void confirmReset(ActionEvent event) throws IOException {
+        stage.setAlwaysOnTop(false);
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Reset");
         alert.setHeaderText("Are you sure you want to reset the app?");
         alert.setContentText("This will clear all data and return to the start page. This cannot be undone.");
         Optional<ButtonType> result = alert.showAndWait();
+
         if (result.isPresent() && result.get() == ButtonType.OK) resetAll(event);
     }
 
@@ -739,9 +745,11 @@ public class FXMLController {
         try {
             prevMatchNum = String.valueOf(Integer.parseInt(info.get("matchNum")) + 1);
             prevScouterName = info.get("scoutName");
+            prevTeamNum = String.valueOf(Integer.parseInt(info.get("teamNum")));
         } catch (Exception e) {
             prevMatchNum = "1";
             prevScouterName = null;
+            prevTeamNum = null;
         }
 
         // reset data storage variables
