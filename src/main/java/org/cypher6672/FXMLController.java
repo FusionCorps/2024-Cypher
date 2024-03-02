@@ -103,13 +103,7 @@ public class FXMLController {
     @FXML private ImageView startLocationPNG; //starting location image
     @FXML private ImageView autoPickupPNG; //auton pickup grid image
 
-
-    private static final DisplayMode bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDisplayMode();
-
-    public static final double screenHeight = bounds.getHeight();
-    public static final double screenWidth = bounds.getWidth();
-    public static final double desiredHeight = screenHeight - 100;
-    public static final double desiredWidth = desiredHeight * 1.5; // 3:2 aspect ratio
+    static Stage stage;
 
     //=============================METHODS FOR CONTROLLING APP LOGIC=============================
     // runs at loading of any scene, defaults null values and reloads previously entered data
@@ -472,6 +466,7 @@ public class FXMLController {
         System.out.println(warnings); // for debug purposes
         if (warnings.isBlank()) return true;
         else {
+            stage.setAlwaysOnTop(false);
             AlertBox.display("Bad inputs", warnings);
             return false;
         }
@@ -761,7 +756,7 @@ public class FXMLController {
     @FXML private void nextPage(ActionEvent event) throws IOException {
         collectData();
         isNextPageClicked = true;
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         setPage(stage, Page.values()[currPage.ordinal() + 1]);
     }
     @FXML private void prevPage(ActionEvent event) throws IOException {
@@ -769,12 +764,13 @@ public class FXMLController {
         collectData();
         if (currPage == Page.BEGIN) return;
         isNextPageClicked = false;
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         setPage(stage, Page.values()[currPage.ordinal() - 1]);
     }
 
     //changes page to the scene specified by sceneIndex
     public static void setPage(Stage stage, Page page) throws IOException {
+        FXMLController.stage = stage;
         if (!stage.isShowing()) stage.show();
 
         currPage = page;
@@ -824,27 +820,27 @@ public class FXMLController {
             }
             else if (event.getCode() == KeyCode.DIGIT1) {
                 collectData();
-                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.PREGAME);
+                setPage(stage, Page.PREGAME);
             }
             else if (event.getCode() == KeyCode.DIGIT2) {
                 collectData();
-                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.AUTON);
+                setPage(stage, Page.AUTON);
             }
             else if (event.getCode() == KeyCode.DIGIT3) {
                 collectData();
-                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.TELEOP);
+                setPage(stage, Page.TELEOP);
             }
             else if (event.getCode() == KeyCode.DIGIT4) {
                 collectData();
-                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.ENDGAME);
+                setPage(stage, Page.ENDGAME);
             }
             else if (event.getCode() == KeyCode.DIGIT5) {
                 collectData();
-                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.QUALITATIVE_NOTES);
+                setPage(stage, Page.QUALITATIVE_NOTES);
             }
             else if (event.getCode() == KeyCode.DIGIT6) {
                 collectData();
-                setPage((Stage) ((Node) event.getSource()).getScene().getWindow(), Page.QR_CODE);
+                setPage(stage, Page.QR_CODE);
             }
         }
     }

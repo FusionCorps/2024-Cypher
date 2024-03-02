@@ -7,12 +7,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 //pop up window for errors (e.g. required fields not filled out)
 //very simple alertbox to be used instead of integrated JavaFX alert class
 public class AlertBox {
     public static void display(String title, String message) {
-        Stage window = new Stage();
+        Stage window = new Stage(StageStyle.UNDECORATED);
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(250);
@@ -32,5 +33,6 @@ public class AlertBox {
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
+        window.setAlwaysOnTop(true);
     }
 }
