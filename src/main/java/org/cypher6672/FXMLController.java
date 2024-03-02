@@ -1,14 +1,16 @@
+//TODO: fix typing into tally
 package org.cypher6672;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.*;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -17,7 +19,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.controlsfx.control.Rating;
 import org.cypher6672.ui.*;
 import org.cypher6672.util.CopyImageToClipBoard;
@@ -51,8 +52,7 @@ public class FXMLController {
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
     private static String prevScouterName = null;
-    private static String prevTeamNum = null;
-
+    private static Integer prevDriveStation = null;
 
     //======================FXML DATA FIELDS======================
     //data for each page, variables are named the same as corresponding fx:ids in fxml files for consistency
@@ -115,7 +115,6 @@ public class FXMLController {
             switch (currPage) {
                 case PREGAME -> {
                     if (matchNum.getText().isEmpty()) matchNum.setText(prevMatchNum);
-                    if (teamNum.getText().isEmpty()) teamNum.setText(prevTeamNum);
                 }
                 case AUTON -> {
                     autoAmp.initNull();
@@ -169,6 +168,10 @@ public class FXMLController {
                         throw new RuntimeException(e);
                     }
                 });
+
+                if (prevDriveStation != null) {
+                    driveStation.selectToggle(driveStation.getToggles().get(prevDriveStation));
+                }
 
                 // display correct startLocation image based on flip and color
                 if (((String) driveStation.getSelectedToggle().getUserData()).charAt(0) == 'b') {
@@ -457,20 +460,26 @@ public class FXMLController {
     private boolean requiredFieldsAreOK() {
         String warnings = "";
         //TODO: add more warnings based on issues with info
+        try {
+            if (info.get("teamNum").isBlank() || info.get("teamNum").matches("0+"))
+                warnings += "Fix the team number (cannot contain only 0s or be blank). ";
+            if (info.get("matchNum").isBlank() || info.get("matchNum").matches("0+"))
+                warnings += "Fix the match number (cannot contain only 0s or be blank). ";
+            if (info.get("scoutName").isBlank())
+                warnings += "Fix the scout name (cannot be blank). ";
 
-        if (info.get("teamNum").isBlank() || info.get("teamNum").matches("0+"))
-            warnings += "Fix the team number (cannot contain only 0s or be blank). ";
-        if (info.get("matchNum").isBlank() || info.get("matchNum").matches("0+"))
-            warnings += "Fix the match number (cannot contain only 0s or be blank). ";
-        if (info.get("scoutName").isBlank())
-            warnings += "Fix the scout name (cannot be blank). ";
 
-
-        System.out.println(warnings); // for debug purposes
-        if (warnings.isBlank()) return true;
-        else {
+            System.out.println(warnings); // for debug purposes
+            if (warnings.isBlank()) return true;
+            else {
+                stage.setAlwaysOnTop(false);
+                AlertBox.display("Bad inputs", warnings);
+                return false;
+            }
+        }
+        catch (Exception e) {
             stage.setAlwaysOnTop(false);
-            AlertBox.display("Bad inputs", warnings);
+            AlertBox.display("Bad inputs", "There was an error with the inputs. Please check them and try again.");
             return false;
         }
     }
@@ -740,34 +749,34 @@ public class FXMLController {
      * <p> {@code letterbox} - resizes scene to fit screen
      */
     //implementations of setPage() for going to next and previous pages
-    @FXML private void resetAll(ActionEvent event) throws IOException {
+    @FXML private void resetAll(Event ignoredEvent) throws IOException {
         // increments match number for next match
         try {
             prevMatchNum = String.valueOf(Integer.parseInt(info.get("matchNum")) + 1);
             prevScouterName = info.get("scoutName");
-            prevTeamNum = String.valueOf(Integer.parseInt(info.get("teamNum")));
+            prevDriveStation = toggleMap.get("driveStation");
         } catch (Exception e) {
             prevMatchNum = "1";
             prevScouterName = null;
-            prevTeamNum = null;
+            prevDriveStation = null;
         }
 
         // reset data storage variables
         data = new StringBuilder();
         info = new LinkedHashMap<>();
         toggleMap = new HashMap<>();
+        autonPickups = new ArrayList<>();
 
-        // resets UI to scene0
-        currPage = Page.BEGIN;
-        nextPage(event);
+        // resets UI
+        setPage(stage, Page.PREGAME);
     }
-    @FXML private void nextPage(ActionEvent event) throws IOException {
+    @FXML private void nextPage(Event event) throws IOException {
         collectData();
         isNextPageClicked = true;
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         setPage(stage, Page.values()[currPage.ordinal() + 1]);
     }
-    @FXML private void prevPage(ActionEvent event) throws IOException {
+    @FXML private void prevPage(Event event) throws IOException {
         //collects data from current page and goes to previous page
         collectData();
         if (currPage == Page.BEGIN) return;
@@ -815,38 +824,47 @@ public class FXMLController {
         scene.heightProperty().addListener(sizeListener);
     }
 
-    @FXML private void runUserKeybinds(KeyEvent event) throws IOException {
+    /**
+     * Keybinds for the app
+     * Keybinds:
+     * Ctrl + Enter - go to next page
+     * Ctrl + Backspace - go to previous page
+     * Ctrl + R - reset all data and go to first page
+     * Ctrl + 1-6 - go to specified page
+     * Ctrl + Shift + E - minimize app
+     *
+     * @param newEvent
+     * @throws IOException
+     */
+    @FXML private void runUserKeybinds(Event newEvent) throws IOException {
+        KeyEvent event = (KeyEvent) newEvent;
         if (event.isControlDown()) {
+            if (event.isShiftDown() && event.getCode() == KeyCode.E) {
+                    stage.setAlwaysOnTop(false);
+                    stage.setIconified(true);
+            }
             if (event.getCode() == KeyCode.ENTER && currPage != Page.QR_CODE) {
-                nextPage(new ActionEvent());
-            }
-            else if (event.getCode() == KeyCode.BACK_SPACE && currPage != Page.BEGIN) {
-                prevPage(new ActionEvent());
-            }
-            else if (event.getCode() == KeyCode.R) {
-                resetAll(new ActionEvent());
-            }
-            else if (event.getCode() == KeyCode.DIGIT1) {
+                nextPage(newEvent);
+            } else if (event.getCode() == KeyCode.BACK_SPACE && currPage != Page.BEGIN) {
+                prevPage(newEvent);
+            } else if (event.getCode() == KeyCode.R) {
+                resetAll(newEvent);
+            } else if (event.getCode() == KeyCode.DIGIT1) {
                 collectData();
                 setPage(stage, Page.PREGAME);
-            }
-            else if (event.getCode() == KeyCode.DIGIT2) {
+            } else if (event.getCode() == KeyCode.DIGIT2) {
                 collectData();
                 setPage(stage, Page.AUTON);
-            }
-            else if (event.getCode() == KeyCode.DIGIT3) {
+            } else if (event.getCode() == KeyCode.DIGIT3) {
                 collectData();
                 setPage(stage, Page.TELEOP);
-            }
-            else if (event.getCode() == KeyCode.DIGIT4) {
+            } else if (event.getCode() == KeyCode.DIGIT4) {
                 collectData();
                 setPage(stage, Page.ENDGAME);
-            }
-            else if (event.getCode() == KeyCode.DIGIT5) {
+            } else if (event.getCode() == KeyCode.DIGIT5) {
                 collectData();
                 setPage(stage, Page.QUALITATIVE_NOTES);
-            }
-            else if (event.getCode() == KeyCode.DIGIT6) {
+            } else if (event.getCode() == KeyCode.DIGIT6) {
                 collectData();
                 setPage(stage, Page.QR_CODE);
             }

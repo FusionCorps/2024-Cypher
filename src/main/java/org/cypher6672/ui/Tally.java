@@ -30,16 +30,15 @@ public class Tally extends GridPane {
 
         // when numerator increment, denominator increment, only if same already same values
         numerator.plus.setOnAction(e -> {
-            if (numerator.value.getText().equals(denominator.value.getText())) {
+//            if (numerator.value.getText().equals(denominator.value.getText())) {
                 numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) + 1));
                 denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) + 1));
-            }
-            else {
-                numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) + 1));
-            }
+//            }
+//            else {
+//                numerator.value.setText(String.valueOf(Integer.parseInt(numerator.value.getText()) + 1));
+//            }
         });
 
-        // if denominator = numerator, decrement both together
         denominator.minus.setOnAction(e -> {
             if (denominator.value.getText().equals("0")) return;
 
@@ -50,6 +49,11 @@ public class Tally extends GridPane {
                 denominator.value.setText(String.valueOf(Integer.parseInt(denominator.value.getText()) - 1));
             }
         });
+
+//        numerator.setOnKeyPressed(e -> {
+//            if (numerator.get)
+//        });
+
     }
 
     public PlusMinusBox getNumerator() {
