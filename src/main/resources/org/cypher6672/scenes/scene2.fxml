@@ -12,18 +12,18 @@
 <?import javafx.scene.text.Font?>
 <?import org.cypher6672.ui.Tally?>
 
-<Pane prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #a6bddb;" stylesheets="@../css/scene2.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController" onKeyPressed="#runUserKeybinds">
+<Pane onKeyPressed="#runUserKeybinds" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #a6bddb;" stylesheets="@../css/scene2.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
 
    <CheckBox id="mobility" fx:id="mobility" layoutX="7.0" layoutY="86.0" mnemonicParsing="false" text="Mobility?" />
 
-   <Button id="pageButton" layoutX="683.0" layoutY="513.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
+   <Button id="pageButton" layoutX="684.0" layoutY="512.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="60.0" prefWidth="175.0" text="Next Page" />
 
-   <Button id="pageButton" layoutY="513.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
+   <Button id="pageButton" layoutX="-1.0" layoutY="513.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
 
    <Label id="title" layoutX="212.0" layoutY="15.0" text="Auton" />
 
 
-   <ImageView fx:id="autoPickupPNG" fitHeight="420.0" fitWidth="472.0" layoutX="386.0" layoutY="90.0" pickOnBounds="true">
+   <ImageView fx:id="autoPickupPNG" fitHeight="420.0" fitWidth="472.0" layoutX="387.0" layoutY="90.0" pickOnBounds="true">
       <Image url="@../images/autoPickupRed.png" />
    </ImageView>
    <Label id="pickupText" layoutX="537.0" layoutY="54.0" prefHeight="19.0" prefWidth="249.0" text="Note Pickups" textAlignment="CENTER" wrapText="true" />

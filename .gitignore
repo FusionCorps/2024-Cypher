@@ -26,3 +26,6 @@ replay_pid*
 .mvn/wrapper/maven-wrapper.jar
 target
 qrCode.png
+buildtools/Cypher2024.exe
+buildtools/Cypher2024Installer.exe
+buildtools/jre

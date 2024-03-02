@@ -1,0 +1,1 @@
+When using the build tools yourself, make sure to fill the jre folder with the files in a Java JDK 17 installation—include all folders such as bin, lib, and jmods. Use launch4j with the .xml build file—this will create a launchable .exe. Running the Inno script will create an installer.

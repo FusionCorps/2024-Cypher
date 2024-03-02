@@ -785,14 +785,14 @@ public class FXMLController {
         stage.setScene(scene);
         stage.sizeToScene();
 
-        double reqHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+        double reqHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight()-65;
 
         letterbox(scene, (Pane) scene.getRoot());
         stage.setWidth(reqHeight * 1.5);
         stage.setHeight(reqHeight);
 
         stage.centerOnScreen();
-//        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(true);
     }
 
     /**
