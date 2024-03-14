@@ -12,6 +12,7 @@ public class PlusMinusBox extends HBox {
     public PlusMinusBox() {
         super();
         value.setText("0");
+        value.setEditable(false);
         minus.setPrefSize(50, 50);
         plus.setPrefSize(50, 50);
         value.setPrefSize(50,50);
@@ -59,6 +60,8 @@ public class PlusMinusBox extends HBox {
     }
 
     public void initNull() {
-        value.setText("0");
+        if (value.getText().isBlank()) {
+            value.setText("0");
+        }
     }
 }

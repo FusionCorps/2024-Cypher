@@ -19,7 +19,7 @@
 
     <CheckBox id="buddyClimb" fx:id="climb" layoutX="54.0" layoutY="120.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="243.0" text="Climbed?" />
    <LimitedTextField id="climbTime" fx:id="climbTime" layoutX="540.0" layoutY="377.0" onKeyPressed="#validateInput" prefHeight="48.0" prefWidth="243.0" text="0" />
-   <Label layoutX="38.0" layoutY="330.0" prefHeight="143.0" prefWidth="478.0" text="Climb Time Est. (s) (Leave 0 if no climb) " textAlignment="CENTER" wrapText="true" />
+   <Label layoutX="38.0" layoutY="330.0" prefHeight="143.0" prefWidth="478.0" text="Climb Time Estimate (seconds)" textAlignment="CENTER" wrapText="true" />
    <Label layoutX="390.0" layoutY="124.0" text="# Climb Partners" />
    <CheckBox id="spotlight" fx:id="spotlight" layoutX="58.0" layoutY="222.0" mnemonicParsing="false" text="Spotlit?" />
    <RadioButton layoutX="390.0" layoutY="203.0" mnemonicParsing="false" selected="true" text="0" userData="0">

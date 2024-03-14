@@ -2,24 +2,24 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\imren\OneDrive\Documents\GitHub\Cypher\out\artifacts\Cypher_jar\Cypher.jar</jar>
-  <outfile>C:\Users\imren\OneDrive\Desktop\Cypher\Cypher2023.exe</outfile>
+  <jar>C:\Users\imren\OfflineDocs\GitHub\Cypher2024\out\artifacts\Cypher2024_jar\Cypher2024.jar</jar>
+  <outfile>C:\Users\imren\OfflineDocs\GitHub\Cypher2024\buildtools\Cypher2024.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
-  <priority>normal</priority>
+  <priority>high</priority>
   <downloadUrl></downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Users\imren\OneDrive\Desktop\Cypher\35174798.ico</icon>
+  <icon>C:\Users\imren\OfflineDocs\GitHub\Cypher2024\buildtools\35174798.ico</icon>
   <singleInstance>
-    <mutexName>Cypher2023.exe</mutexName>
-    <windowTitle>Cypher2023</windowTitle>
+    <mutexName>Cypher2024.exe</mutexName>
+    <windowTitle>Cypher2024</windowTitle>
   </singleInstance>
   <classPath>
-    <mainClass>com.scout.AppRun</mainClass>
+    <mainClass>org.cypher6672.AppRun</mainClass>
   </classPath>
   <jre>
     <path>jre</path>

@@ -51,7 +51,7 @@ public class FXMLController {
     private static char autonPickupGridColor = 'r'; //for flipping auton pickup grid
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
-    private static String prevScouterName = null;
+    private static String prevScouterName = "LazyScouter";
     private static Integer prevDriveStation = null;
 
     //======================FXML DATA FIELDS======================
@@ -99,7 +99,6 @@ public class FXMLController {
     //page 6
     @FXML private ImageView imageBox;
     @FXML private Text reminderBox;
-    @FXML private Text dataStr;
 
     private BufferedImage qrImage;
     @FXML private ImageView startLocationPNG; //starting location image
@@ -110,44 +109,6 @@ public class FXMLController {
     //=============================METHODS FOR CONTROLLING APP LOGIC=============================
     // runs at loading of any scene, defaults null values and reloads previously entered data
     public void initialize() {
-        // when the next page is clicked, default certain fields
-        if (isNextPageClicked) {
-            switch (currPage) {
-                case PREGAME -> {
-                    if (matchNum.getText().isEmpty()) matchNum.setText(prevMatchNum);
-                }
-                case AUTON -> {
-                    autoAmp.initNull();
-                    autoSpeakerClose.initNull();
-                    autoSpeakerMid.initNull();
-                }
-                case TELEOP -> {
-                    friendlyPickups.initNull();
-                    neutralPickups.initNull();
-                    oppPickups.initNull();
-                    sourcePickups.initNull();
-                    teleopSpeakerClose.initNull();
-                    teleopSpeakerMid.initNull();
-                    teleopSpeakerFar.initNull();
-                    teleopAmp.initNull();
-                    teleopTrap.initNull();
-                }
-                case ENDGAME -> {
-                    defaultDisableEndgameFields();
-                }
-                case QUALITATIVE_NOTES -> {
-                    if (prevScouterName != null) scoutName.setText(prevScouterName);
-                }
-                case QR_CODE -> {
-                    reminderBox.setText(info.get("scoutName") + " - " + info.get("teamNum"));;
-                }
-            }
-        }
-        else { // going backward
-            if (currPage == Page.PREGAME) startLocationImageFlipped = autonPickupGridFlipped;
-        }
-        reloadData();
-
         // general things to run when a page is loaded
         switch (currPage) {
             case PREGAME -> {
@@ -253,10 +214,10 @@ public class FXMLController {
                         ((RadioButton) climbPartners.getToggles().get(1)).setDisable(false);
                         ((RadioButton) climbPartners.getToggles().get(2)).setDisable(false);
                     } else {
-                        climbTime.setDisable(true);
                         spotlight.setSelected(false);
                         spotlight.setDisable(true);
                         climbTime.setText("0");
+                        climbTime.setDisable(true);
                         climbPartners.selectToggle(climbPartners.getToggles().get(0));
                         ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
                         ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
@@ -264,13 +225,64 @@ public class FXMLController {
                 });
             }
         }
+
+        reloadData();
+
+        // when the next page is clicked, default certain fields if blank
+        if (isNextPageClicked) {
+            setDefaults();
+            if (currPage == Page.QR_CODE) {
+                try {
+                    sendInfo();
+                } catch (Exception e) {
+                    System.err.println("Error sending info to QR code");
+                }
+            }
+        }
+        else { // going backward
+            // sync auton pickup grid flip with start location flip
+            if (currPage == Page.PREGAME) startLocationImageFlipped = autonPickupGridFlipped;
+            setDefaults();
+        }
     }
 
+    private void setDefaults() {
+        switch (currPage) {
+            case PREGAME -> {
+                preload.setSelected(true); //TODO: consider removing this?
+                if (teamNum.getText().isBlank()) teamNum.setText("6672");
+                if (matchNum.getText().isBlank()) matchNum.setText(prevMatchNum);
+            }
+            case AUTON -> {
+                autoAmp.initNull();
+                autoSpeakerClose.initNull();
+                autoSpeakerMid.initNull();
+            }
+            case TELEOP -> {
+                friendlyPickups.initNull();
+                neutralPickups.initNull();
+                oppPickups.initNull();
+                sourcePickups.initNull();
+                teleopSpeakerClose.initNull();
+                teleopSpeakerMid.initNull();
+                teleopSpeakerFar.initNull();
+                teleopAmp.initNull();
+                teleopTrap.initNull();
+            }
+            case ENDGAME -> {
+                if (climbTime.getText().isBlank()) climbTime.setText("0");
+            }
+            case QUALITATIVE_NOTES -> {
+                if (prevScouterName != null && scoutName.getText().isBlank()) scoutName.setText(prevScouterName);
+            }
+        }
+    }
     private void defaultDisableEndgameFields() {
         spotlight.setDisable(true);
         climbTime.setDisable(true);
 
         climbTime.setText("0");
+        climbTime.setDisable(true);
         ((RadioButton) climbPartners.getToggles().get(1)).setDisable(true);
         ((RadioButton) climbPartners.getToggles().get(2)).setDisable(true);
     }
@@ -285,43 +297,37 @@ public class FXMLController {
 
     //sends data to QR code creator and displays it on screen
     @FXML private void sendInfo() throws Exception {
-        if (requiredFieldsAreOK()) {
-            data = new StringBuilder();
+        data = new StringBuilder(); //clears data for new data to be appended
 
-            //run certain checks to correctly format data; boolean checks,
-            // and remove pieces scored in auton from being recorded in teleop
+        //output string appended to data StringBuilder
+        // correctly format data for QR code output
+        for (String keyName : info.keySet()) {
+            //get embedded alliance + start location value from driveStation
+            if (keyName.equals("driveStation")) {
+                var driveStation = info.get("driveStation");
+                char alliance = driveStation.charAt(0);
+                char startLocation = driveStation.charAt(1);
 
-            //output string appended to data StringBuilder
-            for (String keyName : info.keySet()) {
-                //get embedded alliance + start location value from driveStation
-                if (keyName.equals("driveStation")) {
-                    var driveStation = info.get("driveStation");
-                    char alliance = driveStation.charAt(0);
-                    char startLocation = driveStation.charAt(1);
-
-                    data.append("alliance=").append(alliance).append("|");
-                    data.append("driveStation=").append(alliance).append(startLocation).append("|");
-                }
-                else data.append(keyName).append("=").append(info.get(keyName)).append("|");
+                data.append("alliance=").append(alliance).append("|");
+                data.append("driveStation=").append(alliance).append(startLocation).append("|");
             }
-
-            // prune last '|' character
-            data = data.delete(data.lastIndexOf("|"), data.length());
-
-            dataStr.setText(data.toString());
-
-            String createdQRPath = "qrCode.png";
-
-            //creates QR code and displays it on screen, runs outputAll() to save all data
-            qrImage = QRFuncs.generateQRCode(data.toString(), createdQRPath, 320, 320);
-
-            Image img = new Image("file:" + createdQRPath);
-            imageBox.setImage(img);
-
-            outputAll(Integer.parseInt(info.get("matchNum")),
-                    Integer.parseInt(info.get("teamNum")),
-                    info.get("scoutName"));
+            else data.append(keyName).append("=").append(info.get(keyName)).append("|");
         }
+
+        // prune last '|' character
+        data = data.delete(data.lastIndexOf("|"), data.length());
+
+        String createdQRPath = "qrCode.png";
+
+        //creates QR code and displays it on screen, runs outputAll() to save all data
+        qrImage = QRFuncs.generateQRCode(data.toString(), createdQRPath, 320, 320);
+
+        Image img = new Image("file:" + createdQRPath);
+        imageBox.setImage(img);
+
+        outputAll(Integer.parseInt(info.get("matchNum")),
+                Integer.parseInt(info.get("teamNum")),
+                info.get("scoutName"));
     }
 
     //IMPORTANT: ALL collected data elements must be added to the info HashMap in this method,
@@ -441,7 +447,7 @@ public class FXMLController {
             scoutName.setRestrict("[a-zA-Z ]");
             scoutName.setMaxLength(30);
         } else if (src.equals(climbTime)) {
-            climbTime.setRestrict(("^(?:[1-9]\\d{0,4})?$"));
+            climbTime.setRestrict(("^(?:0|[1-9]\\d{0,2})?$"));
             climbTime.setMaxLength(3);
         } else if (src.equals(comments)) {
             // restrict '|' character from being entered in text area, and sets reasonable max length
@@ -472,13 +478,11 @@ public class FXMLController {
             System.out.println(warnings); // for debug purposes
             if (warnings.isBlank()) return true;
             else {
-                stage.setAlwaysOnTop(false);
                 AlertBox.display("Bad inputs", warnings);
                 return false;
             }
         }
         catch (Exception e) {
-            stage.setAlwaysOnTop(false);
             AlertBox.display("Bad inputs", "There was an error with the inputs. Please check them and try again.");
             return false;
         }
@@ -677,8 +681,6 @@ public class FXMLController {
 
     //displays confirmation popup before resetting app
     @FXML private void confirmReset(ActionEvent event) throws IOException {
-        stage.setAlwaysOnTop(false);
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Reset");
         alert.setHeaderText("Are you sure you want to reset the app?");
@@ -805,7 +807,6 @@ public class FXMLController {
         stage.setHeight(reqHeight);
 
         stage.centerOnScreen();
-        stage.setAlwaysOnTop(true);
     }
 
     /**
@@ -840,7 +841,6 @@ public class FXMLController {
         KeyEvent event = (KeyEvent) newEvent;
         if (event.isControlDown()) {
             if (event.isShiftDown() && event.getCode() == KeyCode.E) {
-                    stage.setAlwaysOnTop(false);
                     stage.setIconified(true);
             }
             if (event.getCode() == KeyCode.ENTER && currPage != Page.QR_CODE) {
@@ -868,6 +868,13 @@ public class FXMLController {
                 collectData();
                 setPage(stage, Page.QR_CODE);
             }
+        }
+    }
+
+    @FXML public void generateQRCode(ActionEvent event) throws Exception {
+        collectData();
+        if (requiredFieldsAreOK()) {
+            nextPage(event);
         }
     }
 }

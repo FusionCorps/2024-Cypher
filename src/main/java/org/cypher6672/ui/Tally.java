@@ -65,7 +65,11 @@ public class Tally extends GridPane {
     }
 
     public void initNull() {
-        numerator.value.setText("0");
-        denominator.value.setText("0");
+        if (numerator.value.getText().isBlank()) {
+            numerator.value.setText("0");
+        }
+        if (denominator.value.getText().isBlank()) {
+            denominator.value.setText("0");
+        }
     }
 }
