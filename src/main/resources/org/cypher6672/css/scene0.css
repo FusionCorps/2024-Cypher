@@ -19,3 +19,9 @@
     -fx-font-family: "Mandatory Plaything";
     -fx-padding: 10px;
 }
+
+#teamBold {
+    -fx-font-weight: bold;
+    -fx-font-family: "Mandatory Plaything";
+    -fx-font-size: 24px;
+}

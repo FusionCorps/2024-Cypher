@@ -51,8 +51,9 @@ public class FXMLController {
     private static char autonPickupGridColor = 'r'; //for flipping auton pickup grid
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
     private static String prevMatchNum = "1"; //stores current matchNum, increments on reset
-    private static String prevScouterName = "LazyScouter";
+    private static String prevScouterName = null;
     private static Integer prevDriveStation = null;
+    private static boolean preloadSelected = true;
 
     //======================FXML DATA FIELDS======================
     //data for each page, variables are named the same as corresponding fx:ids in fxml files for consistency
@@ -106,13 +107,24 @@ public class FXMLController {
 
     static Stage stage;
 
-    //=============================METHODS FOR CONTROLLING APP LOGIC=============================
-    // runs at loading of any scene, defaults null values and reloads previously entered data
-    public void initialize() {
-        // general things to run when a page is loaded
+    // resource paths
+    private static final String blueField = FXMLController.class.getResource("images/2024-field-blue.png").toString();
+    private static final String redField = FXMLController.class.getResource("images/2024-field-red.png").toString();
+    private static final String blueFieldReversed = FXMLController.class.getResource("images/2024-field-reversed-blue.png").toString();
+    private static final String redFieldReversed = FXMLController.class.getResource("images/2024-field-reversed-red.png").toString();
+    private static final String blueAutoPickup = FXMLController.class.getResource("images/autoPickupBlue.png").toString();
+    private static final String redAutoPickup = FXMLController.class.getResource("images/autoPickupRed.png").toString();
+    private static final String blueAutoPickupReversed = FXMLController.class.getResource("images/autoPickupBlueReversed.png").toString();
+    private static final String redAutoPickupReversed = FXMLController.class.getResource("images/autoPickupRedReversed.png").toString();
+
+
+    // general things to run when a page is loaded, regardless of forward or backward
+    private void initGeneral() {
         switch (currPage) {
             case PREGAME -> {
-                //handles team name display
+                startLocationImageFlipped = autonPickupGridFlipped; // sync start location flip with auton pickup grid flip
+
+                //handles team name display based on team number, using local team database
                 teamNum.setOnKeyTyped(event -> {
                     try {
                         BufferedReader csvReader = new BufferedReader(new InputStreamReader(
@@ -130,22 +142,23 @@ public class FXMLController {
                     }
                 });
 
+                // default driveStation based on its input in previous matches
                 if (prevDriveStation != null) {
                     driveStation.selectToggle(driveStation.getToggles().get(prevDriveStation));
                 }
 
-                // display correct startLocation image based on flip and color
+                // display correct startLocation image based on flip and color (from driveStation)
                 if (((String) driveStation.getSelectedToggle().getUserData()).charAt(0) == 'b') {
                     if (startLocationImageFlipped) {
-                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+                        startLocationPNG.setImage(new Image(blueFieldReversed));
                     } else {
-                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+                        startLocationPNG.setImage(new Image(blueField));
                     }
                 } else {
                     if (startLocationImageFlipped) {
-                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+                        startLocationPNG.setImage(new Image(redFieldReversed));
                     } else {
-                        startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+                        startLocationPNG.setImage(new Image(redField));
                     }
                 }
 
@@ -155,22 +168,27 @@ public class FXMLController {
                         char alliance = newValue.getUserData().toString().charAt(0);
                         if (alliance == 'b') {
                             if (startLocationImageFlipped) {
-                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+                                startLocationPNG.setImage(new Image(blueFieldReversed));
                             } else {
-                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+                                startLocationPNG.setImage(new Image(blueField));
                             }
                         } else {
                             if (startLocationImageFlipped) {
-                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+                                startLocationPNG.setImage(new Image(redFieldReversed));
                             } else {
-                                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+                                startLocationPNG.setImage(new Image(redField));
                             }
                         }
                     }
                 });
+
+                preload.selectedProperty().addListener((observable, oldValue, selected) -> {
+                    preloadSelected = selected;
+                });
             }
             case AUTON -> {
                 autonPickupGridFlipped = startLocationImageFlipped; // sync auton pickup grid flip with start location flip
+
                 // show correct auton pickup PNG and grid based on alliance
                 if (autonPickupGridColor == 'b') {
                     autoPickupGridBlue.setVisible(true);
@@ -178,11 +196,11 @@ public class FXMLController {
                     autoPickupGridBlue.setDisable(false);
                     autoPickupGridRed.setDisable(true);
                     if (autonPickupGridFlipped) {
-                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlueReversed.png").toString()));
+                        autoPickupPNG.setImage(new Image(blueAutoPickupReversed));
                         autoPickupGridBlue.rotateProperty().set(180);
                         autoPickupGridBlue.translateXProperty().set(-110);
                     } else {
-                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupBlue.png").toString()));
+                        autoPickupPNG.setImage(new Image(blueAutoPickup));
                         autoPickupGridBlue.rotateProperty().set(0);
                         autoPickupGridBlue.translateXProperty().set(0);
                     }
@@ -192,12 +210,12 @@ public class FXMLController {
                     autoPickupGridBlue.setDisable(true);
                     autoPickupGridRed.setDisable(false);
                     if (autonPickupGridFlipped) {
-                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRedReversed.png").toString()));
+                        autoPickupPNG.setImage(new Image(redAutoPickupReversed));
                         autoPickupGridRed.rotateProperty().set(180);
                         autoPickupGridRed.translateXProperty().set(110);
                     }
                     else {
-                        autoPickupPNG.setImage(new Image(getClass().getResource("images/autoPickupRed.png").toString()));
+                        autoPickupPNG.setImage(new Image(redAutoPickup));
                         autoPickupGridRed.rotateProperty().set(0);
                         autoPickupGridRed.translateXProperty().set(0);
                     }
@@ -225,31 +243,32 @@ public class FXMLController {
                 });
             }
         }
-
-        reloadData();
-
-        // when the next page is clicked, default certain fields if blank
-        if (isNextPageClicked) {
-            setDefaults();
-            if (currPage == Page.QR_CODE) {
-                try {
-                    sendInfo();
-                } catch (Exception e) {
-                    System.err.println("Error sending info to QR code");
-                }
+    }
+    private void initOnPageForward() {
+        // things to run only when going forward
+        if (currPage == Page.QR_CODE) {
+            try {
+                sendInfo();
+            } catch (Exception e) {
+                System.err.println("Error sending info to QR code");
             }
-        }
-        else { // going backward
-            // sync auton pickup grid flip with start location flip
-            if (currPage == Page.PREGAME) startLocationImageFlipped = autonPickupGridFlipped;
-            setDefaults();
         }
     }
 
+    //=============================METHODS FOR CONTROLLING APP LOGIC=============================
+    // runs at loading of any scene, defaults null values and reloads previously entered data
+    public void initialize() {
+        initGeneral();
+        reloadData(); // reloads data previously entered when reentering a page
+        initOnPageForward();
+        setDefaults(); // defaults fields that are blank on the page
+    }
+
     private void setDefaults() {
+        // defaults fields that are blank
         switch (currPage) {
             case PREGAME -> {
-                preload.setSelected(true); //TODO: consider removing this?
+                preload.setSelected(preloadSelected);
                 if (teamNum.getText().isBlank()) teamNum.setText("6672");
                 if (matchNum.getText().isBlank()) matchNum.setText(prevMatchNum);
             }
@@ -478,7 +497,7 @@ public class FXMLController {
             System.out.println(warnings); // for debug purposes
             if (warnings.isBlank()) return true;
             else {
-                AlertBox.display("Bad inputs", warnings);
+                AlertBox.display("xputs", warnings);
                 return false;
             }
         }
@@ -696,18 +715,18 @@ public class FXMLController {
         if (alliance == 'b') {
             if (startLocationImageFlipped) {
                 startLocationImageFlipped = false;
-                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-blue.png").toString()));
+                startLocationPNG.setImage(new Image(blueField));
             } else {
                 startLocationImageFlipped = true;
-                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-blue.png").toString()));
+                startLocationPNG.setImage(new Image(blueFieldReversed));
             }
         } else {
             if (startLocationImageFlipped) {
                 startLocationImageFlipped = false;
-                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-red.png").toString()));
+                startLocationPNG.setImage(new Image(redField));
             } else {
                 startLocationImageFlipped = true;
-                startLocationPNG.setImage(new Image(getClass().getResource("images/2024-field-reversed-red.png").toString()));
+                startLocationPNG.setImage(new Image(redFieldReversed));
             }
         }
     }
@@ -717,29 +736,25 @@ public class FXMLController {
             autoPickupGridBlue.rotateProperty().set(0);
             autoPickupGridBlue.translateXProperty().set(0);
             autonPickupGridFlipped = false;
-            autoPickupPNG.setImage(new Image(getClass().getResource(
-                    "images/autoPickupBlue.png").toString()));
+            autoPickupPNG.setImage(new Image(blueAutoPickup));
         }
         else if (autonPickupGridFlipped && autonPickupGridColor == 'r') {
             autoPickupGridRed.rotateProperty().set(0);
             autoPickupGridRed.translateXProperty().set(0);
             autonPickupGridFlipped = false;
-            autoPickupPNG.setImage(new Image(getClass().getResource(
-                    "images/autoPickupRed.png").toString()));
+            autoPickupPNG.setImage(new Image(redAutoPickup));
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor == 'b') {
             autoPickupGridBlue.rotateProperty().set(180);
             autoPickupGridBlue.translateXProperty().set(-110); // fudge factored to look right
             autonPickupGridFlipped = true;
-            autoPickupPNG.setImage(new Image(getClass().getResource(
-                    "images/autoPickupBlueReversed.png").toString()));
+            autoPickupPNG.setImage(new Image(blueAutoPickupReversed));
         }
         else if (!autonPickupGridFlipped && autonPickupGridColor == 'r') {
             autoPickupGridRed.rotateProperty().set(180);
             autoPickupGridRed.translateXProperty().set(110); // fudge factored to look right
             autonPickupGridFlipped = true;
-            autoPickupPNG.setImage(new Image(getClass().getResource(
-                    "images/autoPickupRedReversed.png").toString()));
+            autoPickupPNG.setImage(new Image(redAutoPickupReversed));
         }
     }
 
@@ -758,9 +773,7 @@ public class FXMLController {
             prevScouterName = info.get("scoutName");
             prevDriveStation = toggleMap.get("driveStation");
         } catch (Exception e) {
-            prevMatchNum = "1";
-            prevScouterName = null;
-            prevDriveStation = null;
+            AlertBox.display("Error", "Error resetting data");
         }
 
         // reset data storage variables

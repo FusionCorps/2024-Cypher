@@ -9,8 +9,8 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#runUserKeybinds" prefHeight="160.0" prefWidth="240.0" stylesheets="@../css/scene0.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
    <Text id="title" layoutX="51.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cypher" />
-   <Button id="beginButton" layoutX="58.0" layoutY="54.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="52.0" prefWidth="125.0" text="Begin" />
-   <Text layoutX="32.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Made by Rishabh Rengarajan, FRC 6672 2024" textAlignment="CENTER" wrappingWidth="177.0" />
+   <Button id="beginButton" layoutX="56.0" layoutY="45.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="52.0" prefWidth="125.0" text="Begin" />
+   <Text layoutX="183.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rishabh R 2024" textAlignment="CENTER" wrappingWidth="56.91055622773574" />
    <ImageView fitHeight="44.0" fitWidth="44.0" layoutX="5.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
       <viewport>
          <Rectangle2D />
@@ -19,4 +19,6 @@
          <Image url="@../images/FusionCorpsLogo.png" />
       </image>
    </ImageView>
+   <Text layoutX="4.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FRC 6672" />
+   <Text id="teamBold" layoutX="76.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fusion Corps" textAlignment="CENTER" wrappingWidth="99.2578125" />
 </Pane>
