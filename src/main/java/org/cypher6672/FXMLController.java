@@ -1,4 +1,3 @@
-//TODO: fix typing into tally
 package org.cypher6672;
 
 import javafx.event.ActionEvent;
@@ -125,7 +124,7 @@ public class FXMLController {
                 startLocationImageFlipped = autonPickupGridFlipped; // sync start location flip with auton pickup grid flip
 
                 //handles team name display based on team number, using local team database
-                teamNum.setOnKeyTyped(event -> {
+                teamNum.textProperty().addListener((observable, oldValue, newValue) -> {
                     try {
                         BufferedReader csvReader = new BufferedReader(new InputStreamReader(
                                 Objects.requireNonNull(this.getClass().getResourceAsStream("teamList.csv"))));
@@ -269,7 +268,6 @@ public class FXMLController {
         switch (currPage) {
             case PREGAME -> {
                 preload.setSelected(preloadSelected);
-                if (teamNum.getText().isBlank()) teamNum.setText("6672");
                 if (matchNum.getText().isBlank()) matchNum.setText(prevMatchNum);
             }
             case AUTON -> {
@@ -315,7 +313,7 @@ public class FXMLController {
      */
 
     //sends data to QR code creator and displays it on screen
-    @FXML private void sendInfo() throws Exception {
+    @FXML private void sendInfo() {
         data = new StringBuilder(); //clears data for new data to be appended
 
         //output string appended to data StringBuilder
@@ -339,14 +337,18 @@ public class FXMLController {
         String createdQRPath = "qrCode.png";
 
         //creates QR code and displays it on screen, runs outputAll() to save all data
-        qrImage = QRFuncs.generateQRCode(data.toString(), createdQRPath, 320, 320);
+        try {
+            qrImage = QRFuncs.generateQRCode(data.toString(), createdQRPath, 320, 320);
 
-        Image img = new Image("file:" + createdQRPath);
-        imageBox.setImage(img);
+            Image img = new Image("file:" + createdQRPath);
+            imageBox.setImage(img);
 
-        outputAll(Integer.parseInt(info.get("matchNum")),
-                Integer.parseInt(info.get("teamNum")),
-                info.get("scoutName"));
+            outputAll(Integer.parseInt(info.get("matchNum")),
+                    Integer.parseInt(info.get("teamNum")),
+                    info.get("scoutName"));
+        } catch (Exception e) {
+            AlertBox.display("Generation Error", "There was an error creating the QR code. Please check all inputs and try again.");
+        }
     }
 
     //IMPORTANT: ALL collected data elements must be added to the info HashMap in this method,
@@ -806,7 +808,6 @@ public class FXMLController {
         if (!stage.isShowing()) stage.show();
 
         currPage = page;
-        stage.setTitle("6672 Cypher Page " + (currPage.ordinal()));
         FXMLLoader loader = new FXMLLoader(FXMLController.class.getResource("scenes/scene" + (currPage.ordinal()) + ".fxml"));
         //if next line causes errors, check syntax in all fxml files
         Scene scene = new Scene(loader.load());
