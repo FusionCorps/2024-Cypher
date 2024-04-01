@@ -10,6 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import org.cypher6672.ui.LimitedTextField?>
+<?import org.cypher6672.ui.Tally?>
 
 <Pane minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#runUserKeybinds" prefHeight="572.0" prefWidth="858.0" style="-fx-background-color: #3690c0;" stylesheets="@../css/scene4.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cypher6672.FXMLController">
     <Button id="pageButton" layoutY="513.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="60.0" prefWidth="175.0" text="Prev Page" />
@@ -18,8 +19,8 @@
     <Label id="endgame" layoutX="277.0" layoutY="30.0" text="Endgame" />
 
     <CheckBox id="buddyClimb" fx:id="climb" layoutX="54.0" layoutY="120.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="243.0" text="Climbed?" />
-   <LimitedTextField id="climbTime" fx:id="climbTime" layoutX="540.0" layoutY="377.0" onKeyPressed="#validateInput" prefHeight="48.0" prefWidth="243.0" text="0" />
-   <Label layoutX="38.0" layoutY="330.0" prefHeight="143.0" prefWidth="478.0" text="Climb Time Estimate (seconds)" textAlignment="CENTER" wrapText="true" />
+   <LimitedTextField id="climbTime" fx:id="climbTime" layoutX="69.0" layoutY="421.0" onKeyPressed="#validateInput" prefHeight="48.0" prefWidth="243.0" text="0" />
+   <Label layoutX="45.0" layoutY="347.0" prefHeight="60.0" prefWidth="335.0" text="Climb Time Est." textAlignment="CENTER" wrapText="true" />
    <Label layoutX="390.0" layoutY="124.0" text="# Climb Partners" />
    <CheckBox id="spotlight" fx:id="spotlight" layoutX="58.0" layoutY="222.0" mnemonicParsing="false" text="Spotlit?" />
    <RadioButton layoutX="390.0" layoutY="203.0" mnemonicParsing="false" selected="true" text="0" userData="0">
@@ -37,4 +38,6 @@
          <Image url="@../images/FusionCorpsLogo.png" />
       </image>
    </ImageView>
+   <Label layoutX="476.0" layoutY="377.0" text="Trap" />
+   <Tally fx:id="teleopTrap" layoutX="622.0" layoutY="343.0" />
 </Pane>

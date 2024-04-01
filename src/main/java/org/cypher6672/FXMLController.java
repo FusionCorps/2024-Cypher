@@ -44,6 +44,8 @@ public class FXMLController {
         putIfAbsent("climbPartners", null);
     }}; //stores toggle group values
 
+    public static String eventName = "TXCMP"; // FW, DAL, TXCMP, WORLD
+
     private static StringBuilder data = new StringBuilder(); //used to build data output string in sendInfo()
     private static boolean isNextPageClicked = false; //used in initialize() to prevent data from being sent to info HashMap before user clicks next page
     private static boolean startLocationImageFlipped = false; //for flipping starting location image
@@ -81,8 +83,8 @@ public class FXMLController {
     @FXML private Tally teleopSpeakerMid;
     @FXML private Tally teleopSpeakerFar;
     @FXML private Tally teleopAmp;
-    @FXML private Tally teleopTrap;
     //page 4
+    @FXML private Tally teleopTrap;
     @FXML private CheckBox climb;
     @FXML private LimitedTextField climbTime;
     @FXML private ToggleGroup climbPartners;
@@ -284,9 +286,9 @@ public class FXMLController {
                 teleopSpeakerMid.initNull();
                 teleopSpeakerFar.initNull();
                 teleopAmp.initNull();
-                teleopTrap.initNull();
             }
             case ENDGAME -> {
+                teleopTrap.initNull();
                 if (climbTime.getText().isBlank()) climbTime.setText("0");
             }
             case QUALITATIVE_NOTES -> {
@@ -381,9 +383,9 @@ public class FXMLController {
                 collectDataTally(teleopSpeakerMid, "teleopSpeakerMid", "teleopSpeakerMidMisses", true);
                 collectDataTally(teleopSpeakerFar, "teleopSpeakerFar", "teleopSpeakerFarMisses", true);
                 collectDataTally(teleopAmp, "teleopAmp", "teleopAmpMisses", true);
-                collectDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
             }
             case ENDGAME -> {
+                collectDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
                 collectDataCheckBox(climb, "climb");
                 collectDataTextField(climbTime, "climbTime");
                 collectDataToggleGroup(climbPartners, "climbPartners");
@@ -431,9 +433,9 @@ public class FXMLController {
                 reloadDataTally(teleopSpeakerMid, "teleopSpeakerMid", "teleopSpeakerMidMisses", true);
                 reloadDataTally(teleopSpeakerFar, "teleopSpeakerFar", "teleopSpeakerFarMisses", true);
                 reloadDataTally(teleopAmp, "teleopAmp", "teleopAmpMisses", true);
-                reloadDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
             }
             case ENDGAME -> {
+                reloadDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
                 reloadDataCheckBox(climb, "climb");
                 reloadDataTextField(climbTime, "climbTime");
                 reloadDataToggleGroup(climbPartners, "climbPartners");
@@ -517,10 +519,10 @@ public class FXMLController {
      *     @param scoutName name of scout
      */
     private void outputAll(int matchNum, int teamNum, String scoutName) {
-        String outputPath = "C:\\Users\\" + System.getProperty("user.name") + "\\Desktop\\Scouting";
-        String qrCodePath = outputPath + "\\qrcodes";
+        String outputPath = "C:\\Users\\" + System.getProperty("user.name") + "\\Desktop\\Scouting" + eventName;
+        String qrCodePath = outputPath + "\\qrcodes" + eventName;
         String txtPath = outputPath + "\\texts";
-        String matchDataPath = outputPath + "\\matchData.csv";
+        String matchDataPath = outputPath + "\\matchData" + eventName + ".csv";
 
         //FORMAT: Q[match number]-[team number]-[scouter name]
         String dataName = "Q"  + matchNum + "-"  + teamNum + "-" + scoutName;
