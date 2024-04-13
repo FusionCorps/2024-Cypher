@@ -59,4 +59,14 @@
     -fx-alignment: center;
 }
 
+#updateScheduleButton {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
 

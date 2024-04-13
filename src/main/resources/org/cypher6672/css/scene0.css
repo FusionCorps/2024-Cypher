@@ -25,3 +25,12 @@
     -fx-font-family: "Mandatory Plaything";
     -fx-font-size: 24px;
 }
+
+#updateScheduleButton {
+    -fx-background-color: #000000FF;
+    -fx-text-fill: white;
+    -fx-font-size: 8px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Mandatory Plaything";
+    -fx-padding: 2px;
+}

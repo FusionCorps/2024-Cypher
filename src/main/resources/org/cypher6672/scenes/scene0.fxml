@@ -20,5 +20,6 @@
       </image>
    </ImageView>
    <Text layoutX="4.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="FRC 6672" />
-   <Text id="teamBold" layoutX="76.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fusion Corps" textAlignment="CENTER" wrappingWidth="99.2578125" />
+   <Text id="teamBold" layoutX="74.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fusion Corps" wrappingWidth="94.0625" />
+   <Button id="updateScheduleButton" graphicTextGap="0.0" layoutX="2.0" layoutY="114.0" mnemonicParsing="false" onAction="#openSchedule" prefHeight="30.0" prefWidth="62.0" text="Open/Save Schedule" textAlignment="CENTER" wrapText="true" />
 </Pane>

@@ -7,6 +7,7 @@ module com.scout {
     requires com.google.zxing.javase;
     requires org.controlsfx.controls;
     requires java.net.http;
+    requires org.json;
 
     opens org.cypher6672 to javafx.fxml;
     exports org.cypher6672;

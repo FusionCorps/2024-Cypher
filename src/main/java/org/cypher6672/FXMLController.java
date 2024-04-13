@@ -22,6 +22,8 @@ import org.controlsfx.control.Rating;
 import org.cypher6672.ui.*;
 import org.cypher6672.util.CopyImageToClipBoard;
 import org.cypher6672.util.QRFuncs;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -29,6 +31,10 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
 import java.util.*;
 
 public class FXMLController {
@@ -44,10 +50,9 @@ public class FXMLController {
         putIfAbsent("climbPartners", null);
     }}; //stores toggle group values
 
-    public static String eventName = "TXCMP"; // FW, DAL, TXCMP, WORLD
+    public static String eventCode = "CURIE"; // FW, DAL, TXCMP1 (mercury), CURIE
 
     private static StringBuilder data = new StringBuilder(); //used to build data output string in sendInfo()
-    private static boolean isNextPageClicked = false; //used in initialize() to prevent data from being sent to info HashMap before user clicks next page
     private static boolean startLocationImageFlipped = false; //for flipping starting location image
     private static char autonPickupGridColor = 'r'; //for flipping auton pickup grid
     private static boolean autonPickupGridFlipped = false; //for flipping auton pickup grid
@@ -117,15 +122,21 @@ public class FXMLController {
     private static final String redAutoPickup = FXMLController.class.getResource("images/autoPickupRed.png").toString();
     private static final String blueAutoPickupReversed = FXMLController.class.getResource("images/autoPickupBlueReversed.png").toString();
     private static final String redAutoPickupReversed = FXMLController.class.getResource("images/autoPickupRedReversed.png").toString();
+    private static final String outputPath = "C:\\Users\\" + System.getProperty("user.name") + "\\Desktop\\Scouting" + eventCode;
+    private static final String qrCodePath = outputPath + "\\qrcodes" + eventCode;
+    private static final String txtPath = outputPath + "\\texts";
+    private static final String matchDataPath = outputPath + "\\matchData" + eventCode + ".csv";
+    private static final String schedulePath = outputPath + "\\schedule.csv";
 
+    List<int[]> schedule;
 
     // general things to run when a page is loaded, regardless of forward or backward
     private void initGeneral() {
         switch (currPage) {
             case PREGAME -> {
+                createSchedule();
                 startLocationImageFlipped = autonPickupGridFlipped; // sync start location flip with auton pickup grid flip
 
-                //handles team name display based on team number, using local team database
                 teamNum.textProperty().addListener((observable, oldValue, newValue) -> {
                     try {
                         BufferedReader csvReader = new BufferedReader(new InputStreamReader(
@@ -183,8 +194,15 @@ public class FXMLController {
                     }
                 });
 
-                preload.selectedProperty().addListener((observable, oldValue, selected) -> {
-                    preloadSelected = selected;
+                preload.selectedProperty().addListener((observable, oldValue, selected) -> preloadSelected = selected);
+
+
+                driveStation.selectedToggleProperty().addListener(((observableValue, toggle, t1) -> dynamicUpdateTeamNum()));
+
+                matchNum.textProperty().addListener((observable, oldValue, newValue) ->  {
+                    if (!newValue.isBlank()) {
+                        dynamicUpdateTeamNum();
+                    }
                 });
             }
             case AUTON -> {
@@ -243,17 +261,33 @@ public class FXMLController {
                     }
                 });
             }
-        }
-    }
-    private void initOnPageForward() {
-        // things to run only when going forward
-        if (currPage == Page.QR_CODE) {
-            try {
-                sendInfo();
-            } catch (Exception e) {
-                System.err.println("Error sending info to QR code");
+            case QR_CODE -> {
+                try {
+                    sendInfo();
+                } catch (Exception e) {
+                    System.err.println("Error sending info to QR code");
+                }
             }
         }
+    }
+
+    private void dynamicUpdateTeamNum() {
+        int[] match = schedule.stream()
+                .filter(row -> row[0] == Integer.parseInt(matchNum.getText()))
+                .findFirst()
+                .orElse(new int[7]);
+
+        int column = switch (driveStation.getSelectedToggle().getUserData().toString()) {
+            case "r1" -> 1;
+            case "r2" -> 2;
+            case "r3" -> 3;
+            case "b1" -> 4;
+            case "b2" -> 5;
+            case "b3" -> 6;
+            default -> throw new IllegalStateException("Unexpected value: " + driveStation.getSelectedToggle().getUserData().toString());
+        };
+
+        teamNum.setText(String.valueOf(match[column]));
     }
 
     //=============================METHODS FOR CONTROLLING APP LOGIC=============================
@@ -261,7 +295,6 @@ public class FXMLController {
     public void initialize() {
         initGeneral();
         reloadData(); // reloads data previously entered when reentering a page
-        initOnPageForward();
         setDefaults(); // defaults fields that are blank on the page
     }
 
@@ -519,11 +552,6 @@ public class FXMLController {
      *     @param scoutName name of scout
      */
     private void outputAll(int matchNum, int teamNum, String scoutName) {
-        String outputPath = "C:\\Users\\" + System.getProperty("user.name") + "\\Desktop\\Scouting" + eventName;
-        String qrCodePath = outputPath + "\\qrcodes" + eventName;
-        String txtPath = outputPath + "\\texts";
-        String matchDataPath = outputPath + "\\matchData" + eventName + ".csv";
-
         //FORMAT: Q[match number]-[team number]-[scouter name]
         String dataName = "Q"  + matchNum + "-"  + teamNum + "-" + scoutName;
 
@@ -643,8 +671,6 @@ public class FXMLController {
     }
     @FXML private void manipAutonPickupGrid(ActionEvent event) {
         Button btn = (Button) event.getSource();
-
-
         if (btn.getStyle().contains("-fx-background-color: white;")) {
             btn.setStyle("-fx-background-color: green; -fx-border-color: black;");
             FXMLController.autonPickups.add(Integer.valueOf(btn.getUserData().toString()));
@@ -791,7 +817,6 @@ public class FXMLController {
     }
     @FXML private void nextPage(Event event) throws IOException {
         collectData();
-        isNextPageClicked = true;
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         setPage(stage, Page.values()[currPage.ordinal() + 1]);
     }
@@ -799,7 +824,6 @@ public class FXMLController {
         //collects data from current page and goes to previous page
         collectData();
         if (currPage == Page.BEGIN) return;
-        isNextPageClicked = false;
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         setPage(stage, Page.values()[currPage.ordinal() - 1]);
     }
@@ -828,8 +852,6 @@ public class FXMLController {
     /**
      * Resizes the scene elements as the stage changes size.
      * ALways call this method after showing the stage, so that scene.getWidth() and scene.getHeight() are valid.
-     * @param scene
-     * @param contentPane
      */
     private static void letterbox(final Scene scene, final Pane contentPane) {
         final double initWidth  = scene.getWidth();
@@ -850,8 +872,6 @@ public class FXMLController {
      * Ctrl + 1-6 - go to specified page
      * Ctrl + Shift + E - minimize app
      *
-     * @param newEvent
-     * @throws IOException
      */
     @FXML private void runUserKeybinds(Event newEvent) throws IOException {
         KeyEvent event = (KeyEvent) newEvent;
@@ -891,6 +911,94 @@ public class FXMLController {
         collectData();
         if (requiredFieldsAreOK()) {
             nextPage(event);
+        }
+    }
+
+    @FXML public void openSchedule(ActionEvent ignoredEvent) throws IOException {
+        new File(outputPath).mkdirs();
+        boolean fileDidNotExist = new File(schedulePath).createNewFile();
+        BufferedReader r = new BufferedReader(new FileReader(schedulePath));
+        FileWriter wr;
+        // if connected to internet, prefer schedule from TBA API; otherwise put a placeholder for manually entering schedule
+        if (isInternetConnected()) {
+            wr = new FileWriter(schedulePath);
+            String matchUrl = "https://frc-api.firstinspires.org/v3.0/2024/schedule/" + eventCode + "?tournamentLevel=Qualification";
+            HttpURLConnection con = (HttpURLConnection) new URL(matchUrl).openConnection();
+            con.setRequestMethod("GET");
+            final String auth = "thepianoman:40e1597d-89f6-4dc1-9c90-3359b87ea809";
+            String encodedAuth = new String(Base64.getEncoder().encode(auth.getBytes()));
+            con.setRequestProperty("Authorization", "Basic " + encodedAuth);
+            con.setRequestProperty("Accept", "application/json");
+
+            StringBuilder response = new StringBuilder();
+            if (con.getResponseCode() == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                in.lines().forEach(response::append);
+                in.close();
+                con.disconnect();
+                try {
+                    JSONArray arr = new JSONObject(response.toString()).getJSONArray("Schedule");
+                    for (Object obj : arr) {
+                        JSONObject match = (JSONObject) obj;
+                        JSONArray teams = match.getJSONArray("teams");
+                        int matchNum = match.getInt("matchNumber");
+                        int r1 = ((JSONObject) teams.get(0)).getInt("teamNumber");
+                        int r2 = ((JSONObject) teams.get(1)).getInt("teamNumber");
+                        int r3 = ((JSONObject) teams.get(2)).getInt("teamNumber");
+                        int b1 = ((JSONObject) teams.get(3)).getInt("teamNumber");
+                        int b2 = ((JSONObject) teams.get(4)).getInt("teamNumber");
+                        int b3 = ((JSONObject) teams.get(5)).getInt("teamNumber");
+                        wr.write(matchNum + "," + r1 + "," + r2 + "," + r3 + "," + b1 + "," + b2 + "," + b3 + "\n");
+                    }
+                } catch (IOException e) {
+                    System.err.println("Error reading JSON");
+                    }
+                    wr.flush();
+                    wr.close();
+            }
+            else {
+                System.out.println("Failed to fetch data from the API");
+            }
+        }
+
+        if (r.readLine() == null || r.readLine().isBlank()) {
+                wr = new FileWriter(schedulePath);
+                wr.write("[Match Number],[Red1],[Red2],[Red3],[Blue1],[Blue2],[Blue3]\n");
+                wr.flush();
+                wr.close();
+        }
+        try {
+            Desktop.getDesktop().open(new File(schedulePath));
+        } catch (Exception e) {
+            System.err.println("Copy failure");
+        }
+    }
+
+    private void createSchedule() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(schedulePath))) {
+            schedule = reader.lines().parallel()
+                    .map(line -> {
+                        String[] strings = line.split(",");
+                        int[] records = new int[7];
+                        for (int i = 0; i < 7; i++)
+                            records[i] = Integer.parseInt(strings[i]);
+                        return records;
+                    })
+                    .toList();
+        } catch (Exception e) {
+            System.err.println("Failed to Create schedule");
+        }
+    }
+
+
+    private boolean isInternetConnected() {
+        try {
+            URL url = new URL("https://www.google.com");
+            URLConnection connection = url.openConnection();
+            connection.connect();
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 }
