@@ -960,8 +960,8 @@ public class FXMLController {
                 System.out.println("Failed to fetch data from the API");
             }
         }
-
-        if (r.readLine() == null || r.readLine().isBlank()) {
+        String check = r.readLine();
+        if (check == null || check.isBlank()) {
                 wr = new FileWriter(schedulePath);
                 wr.write("[Match Number],[Red1],[Red2],[Red3],[Blue1],[Blue2],[Blue3]\n");
                 wr.flush();
