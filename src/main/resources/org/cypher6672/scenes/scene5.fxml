@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
@@ -23,18 +22,17 @@
     <TextArea id="comments" fx:id="comments" layoutX="478.0" layoutY="88.0" onKeyPressed="#validateInput" prefHeight="347.0" prefWidth="363.0" promptText="Comments (fouls, strategy, anything else notable)" />
     <LimitedTextField id="scoutNameTextField" fx:id="scoutName" layoutX="388.0" layoutY="453.0" onKeyPressed="#validateInput" prefHeight="45.0" prefWidth="253.0" />
     <Label layoutX="112.0" layoutY="457.0" text="Scouter Name" />
-   <Label id="driverSkill" layoutX="46.0" layoutY="163.0" text="Shooter" />
-   <Rating fx:id="shooter" layoutX="272.0" layoutY="165.0" rating="3.0" />
-   <Label id="driverSkill" layoutX="71.0" layoutY="240.0" text="Intake" />
-   <Rating fx:id="intake" layoutX="272.0" layoutY="241.0" rating="3.0" />
-   <Label id="driverSkill" layoutX="74.0" layoutY="317.0" prefHeight="45.0" prefWidth="127.0" text="Speed" textAlignment="CENTER" wrapText="true" />
-   <Rating fx:id="speed" layoutX="272.0" layoutY="317.0" rating="3.0" />
-   <Label id="driverSkill" layoutX="21.0" layoutY="394.0" text="Driver Skill" />
-   <Rating fx:id="driver" layoutX="272.0" layoutY="396.0" rating="3.0" />
-   <CheckBox fx:id="shuttle" layoutX="18.0" layoutY="96.0" mnemonicParsing="false" text="Shuttlebot?" />
-   <Line endX="331.3999938964844" layoutX="123.0" layoutY="221.0" startX="-100.0" />
-   <Line endX="331.3999938964844" layoutX="123.0" layoutY="298.0" startX="-100.0" />
-   <Line endX="331.3999938964844" layoutX="123.0" layoutY="383.0" startX="-100.0" />
+   <Label id="driverSkill" layoutX="46.0" layoutY="129.0" text="Shooter" />
+   <Rating fx:id="shooter" layoutX="272.0" layoutY="131.0" rating="3.0" />
+   <Label id="driverSkill" layoutX="71.0" layoutY="206.0" text="Intake" />
+   <Rating fx:id="intake" layoutX="272.0" layoutY="207.0" rating="3.0" />
+   <Label id="driverSkill" layoutX="74.0" layoutY="283.0" prefHeight="45.0" prefWidth="127.0" text="Speed" textAlignment="CENTER" wrapText="true" />
+   <Rating fx:id="speed" layoutX="272.0" layoutY="283.0" rating="3.0" />
+   <Label id="driverSkill" layoutX="21.0" layoutY="360.0" text="Driver Skill" />
+   <Rating fx:id="driver" layoutX="272.0" layoutY="362.0" rating="3.0" />
+   <Line endX="331.3999938964844" layoutX="123.0" layoutY="187.0" startX="-100.0" />
+   <Line endX="331.3999938964844" layoutX="123.0" layoutY="264.0" startX="-100.0" />
+   <Line endX="331.3999938964844" layoutX="123.0" layoutY="349.0" startX="-100.0" />
    <ImageView fitHeight="44.0" fitWidth="44.0" layoutX="23.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
       <viewport>
          <Rectangle2D />

@@ -34,11 +34,11 @@
    <PlusMinusBox fx:id="sourcePickups" layoutX="684.0" layoutY="131.0" />
    <PlusMinusBox fx:id="oppPickups" layoutX="684.0" layoutY="209.0" />
    <Line endX="819.6000366210938" layoutX="122.0" layoutY="282.0" startX="-100.0" />
-   <Label layoutX="312.0" layoutY="491.0" text="Amp" />
+   <Label layoutX="192.0" layoutY="491.0" text="Amp" />
    <Label layoutX="3.0" layoutY="307.0" prefHeight="96.0" prefWidth="118.0" text="Spk Close" textAlignment="CENTER" wrapText="true" />
    <Label layoutX="310.0" layoutY="316.0" prefHeight="79.0" prefWidth="72.0" text="Spk Mid" textAlignment="CENTER" wrapText="true" />
    <Label layoutX="602.0" layoutY="316.0" prefHeight="79.0" prefWidth="72.0" text="Spk Far" textAlignment="CENTER" wrapText="true" />
-   <Tally fx:id="teleopAmp" layoutX="393.0" layoutY="445.0" />
+   <Tally fx:id="teleopAmp" layoutX="277.0" layoutY="445.0" />
    <Tally fx:id="teleopSpeakerClose" layoutX="130.0" layoutY="299.0" />
    <Tally fx:id="teleopSpeakerMid" layoutX="397.0" layoutY="300.0" />
    <Tally fx:id="teleopSpeakerFar" layoutX="684.0" layoutY="299.0" />
@@ -50,4 +50,6 @@
          <Image url="@../images/FusionCorpsLogo.png" />
       </image>
    </ImageView>
+   <Label layoutX="481.0" layoutY="453.0" text="Shuttle" />
+   <PlusMinusBox fx:id="shuttle" layoutX="657.0" layoutY="445.0" />
 </Pane>

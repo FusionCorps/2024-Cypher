@@ -88,6 +88,8 @@ public class FXMLController {
     @FXML private Tally teleopSpeakerMid;
     @FXML private Tally teleopSpeakerFar;
     @FXML private Tally teleopAmp;
+    @FXML private PlusMinusBox shuttle;
+
     //page 4
     @FXML private Tally teleopTrap;
     @FXML private CheckBox climb;
@@ -95,7 +97,6 @@ public class FXMLController {
     @FXML private ToggleGroup climbPartners;
     @FXML private CheckBox spotlight;
     //page 5
-    @FXML private CheckBox shuttle;
     @FXML private Rating shooter;
     @FXML private Rating intake;
     @FXML private Rating speed;
@@ -416,6 +417,7 @@ public class FXMLController {
                 collectDataTally(teleopSpeakerMid, "teleopSpeakerMid", "teleopSpeakerMidMisses", true);
                 collectDataTally(teleopSpeakerFar, "teleopSpeakerFar", "teleopSpeakerFarMisses", true);
                 collectDataTally(teleopAmp, "teleopAmp", "teleopAmpMisses", true);
+                collectDataPlusMinusBox(shuttle, "shuttle");
             }
             case ENDGAME -> {
                 collectDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
@@ -425,7 +427,6 @@ public class FXMLController {
                 collectDataCheckBox(spotlight, "spotlight");
             }
             case QUALITATIVE_NOTES -> {
-                collectDataCheckBox(shuttle, "shuttle");
                 collectDataRating(shooter, "shooter");
                 collectDataRating(intake, "intake");
                 collectDataRating(speed, "speed");
@@ -466,6 +467,8 @@ public class FXMLController {
                 reloadDataTally(teleopSpeakerMid, "teleopSpeakerMid", "teleopSpeakerMidMisses", true);
                 reloadDataTally(teleopSpeakerFar, "teleopSpeakerFar", "teleopSpeakerFarMisses", true);
                 reloadDataTally(teleopAmp, "teleopAmp", "teleopAmpMisses", true);
+                reloadDataPlusMinusBox(shuttle, "shuttle");
+
             }
             case ENDGAME -> {
                 reloadDataTally(teleopTrap, "teleopTrap", "teleopTrapMisses", true);
@@ -475,7 +478,6 @@ public class FXMLController {
                 reloadDataCheckBox(spotlight, "spotlight");
             }
             case QUALITATIVE_NOTES -> {
-                reloadDataCheckBox(shuttle, "shuttle");
                 reloadDataRating(shooter, "shooter");
                 reloadDataRating(intake, "intake");
                 reloadDataRating(speed, "speed");
